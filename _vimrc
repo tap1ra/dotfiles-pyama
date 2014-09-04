@@ -18,8 +18,6 @@ NeoBundle 'Shougo/neomru.vim'
 """"""""""""""""""""""""""""""
 " Unit.vimの設定
 """"""""""""""""""""""""""""""
-" 入力モードで開始する
-let g:unite_enable_start_insert=1
 " バッファ一覧
 noremap <C-P> :Unite buffer<CR>
 
@@ -32,6 +30,10 @@ noremap <C-N> :Unite -buffer-name=file file<CR>
 noremap <C-Z> :Unite file_mru<CR>
 " sourcesを「今開いているファイルのディレクトリ」とする
 noremap :uff :<C-u>UniteWithBufferDir file -buffer-name=file<CR>
+" ESCキーを2回押すと終了する
+au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
+au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
+
 """"""""""""""""""""""""""""""
 
 " ファイルをtree表示してくれる
@@ -49,76 +51,14 @@ set statusline+=%{fugitive#statusline()}
 " Rails向けのコマンドを提供する
 NeoBundle 'tpope/vim-rails'
 
-" Ruby向けにendを自動挿入してくれる
-NeoBundle 'tpope/vim-endwise'
-
 " コメントON/OFFを手軽に実行
 NeoBundle 'tomtom/tcomment_vim'
-
-" インデントに色を付けて見やすくする
-NeoBundle 'nathanaelkane/vim-indent-guides'
-
-" vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
-let g:indent_guides_enable_on_vim_startup = 1
 
 " ログファイルを色づけしてくれる
 NeoBundle 'vim-scripts/AnsiEsc.vim'
 
 " 行末の半角スペースを可視化
 NeoBundle 'bronson/vim-trailing-whitespace'
-
-" http://inari.hatenablog.com/entry/2014/05/05/231307
-""""""""""""""""""""""""""""""
-" 全角スペースの表示
-""""""""""""""""""""""""""""""
-function! ZenkakuSpace()
-  highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
-endfunction
-
-    if has('syntax')
-    augroup ZenkakuSpace
-		autocmd!
-				        autocmd ColorScheme * call ZenkakuSpace()
-					        autocmd VimEnter,WinEnter,BufRead * let w:m1=matchadd('ZenkakuSpace', '　')
-						    augroup END
-						        call ZenkakuSpace()
-						endif
-						""""""""""""""""""""""""""""""
-
-" https://sites.google.com/site/fudist/Home/vim-nihongo-ban/-vimrc-sample
-""""""""""""""""""""""""""""""
-" 挿入モード時、ステータスラインの色を変更
-""""""""""""""""""""""""""""""
-let g:hi_insert = 'highlight StatusLine guifg=darkblue guibg=darkyellow gui=none ctermfg=blue ctermbg=yellow cterm=none'
-
-if has('syntax')
-	  augroup InsertHook
-		      autocmd!
-		          autocmd InsertEnter * call s:StatusLine('Enter')
-			      autocmd InsertLeave * call s:StatusLine('Leave')
-			        augroup END
-			endif
-
-			let s:slhlcmd = ''
-			function! s:StatusLine(mode)
-				  if a:mode == 'Enter'
-					      silent! let s:slhlcmd = 'highlight ' . s:GetHighlight('StatusLine')
-					          silent exec g:hi_insert
-						    else
-							        highlight clear StatusLine
-								    silent exec s:slhlcmd
-								      endif
-							      endfunction
-
-							      function! s:GetHighlight(hi)
-								        redir => hl
-									  exec 'highlight '.a:hi
-									    redir END
-									      let hl = substitute(hl, '[\r\n]', '', 'g')
-									        let hl = substitute(hl, 'xxx', '', '')
-										  return hl
-									  endfunction
-									  """"""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""
 " 各種オプションの設定
@@ -151,26 +91,18 @@ set browsedir=buffer
 set smartcase
 " 検索結果をハイライト表示する
 set hlsearch
-" 暗い背景色に合わせた配色にする
-set background=dark
 " タブ入力を複数の空白入力に置き換える
 set expandtab
 " 検索ワードの最初の文字を入力した時点で検索を開始する
 set incsearch
 " 保存されていないファイルがあるときでも別のファイルを開けるようにする
 set hidden
-" 不可視文字を表示する
-set list
-" タブと行の続きを可視化する
-set listchars=tab:>\ ,extends:<
 " 行番号を表示する
 set number
 " 対応する括弧やブレースを表示する
 set showmatch
 " 改行時に前の行のインデントを継続する
 set autoindent
-" 改行時に入力された行の末尾に合わせて次の行のインデントを増減する
-set smartindent
 " タブ文字の表示幅
 set tabstop=2
 " Vimが挿入するインデントの幅
@@ -181,10 +113,13 @@ set smarttab
 set whichwrap=b,s,h,l,<,>,[,]
 " 構文毎に文字色を変化させる
 syntax on
-" カラースキーマの指定
-colorscheme desert
+" カラースキーマ指定
+"colorscheme blue 
 " 行番号の色
 highlight LineNr ctermfg=darkyellow
+
+set list
+set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
 """"""""""""""""""""""""""""""
 
 " 隠しファイルをデフォルトで表示させる
@@ -194,6 +129,5 @@ highlight LineNr ctermfg=darkyellow
 "autocmd VimEnter * execute 'NERDTree'
 
 "
-filetype indent on
 
 
