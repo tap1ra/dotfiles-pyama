@@ -46,6 +46,8 @@ NeoBundle 'scrooloose/nerdtree'
 " Gitを便利に使う
 NeoBundle 'tpope/vim-fugitive'
 
+NeoBundle 'kana/vim-submode'
+
 " grep検索の実行後にQuickFix Listを表示する
 autocmd QuickFixCmdPost *grep* cwindow
 
@@ -112,9 +114,9 @@ set tags=~/.tags
 " " 対応する括弧やブレースを表示する
  set showmatch
 " " 改行時に前の行のインデントを継続する
-" set autoindent
+ set autoindent
 " " 改行時に入力された行の末尾に合わせて次の行のインデントを増減する
-" set smartindent
+ set smartindent
 " " タブ文字の表示幅
  set tabstop=2
 " " Vimが挿入するインデントの幅
@@ -125,14 +127,42 @@ set tags=~/.tags
  set whichwrap=b,s,h,l,<,>,[,]
 " " 構文毎に文字色を変化させる
  syntax on
-""""""""""""""""""""""""""""""
-
-" 隠しファイルをデフォルトで表示させる
-"let NERDTreeShowHidden = 1
-"  
-" デフォルトでツリーを表示させる
-"autocmd VimEnter * execute 'NERDTree'
-
-"
+set fileencodings=ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
 
 
+nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+nnoremap sn gt
+nnoremap sp gT
+nnoremap sr <C-w>r
+nnoremap s= <C-w>=
+nnoremap sw <C-w>w
+nnoremap so <C-w>_<C-w>|
+nnoremap sO <C-w>=
+nnoremap sN :<C-u>bn<CR>
+nnoremap sP :<C-u>bp<CR>
+nnoremap st :<C-u>tabnew<CR>
+nnoremap sT :<C-u>Unite tab<CR>
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sq :<C-u>q<CR>
+nnoremap sQ :<C-u>bd<CR>
+nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
+nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+
+
+call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+call submode#map('bufmove', 'n', '', '<', '<C-w><')
+call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+call submode#map('bufmove', 'n', '', '-', '<C-w>-')
