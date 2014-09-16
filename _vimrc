@@ -127,6 +127,10 @@ set tags=~/.tags
  set whichwrap=b,s,h,l,<,>,[,]
 " " 構文毎に文字色を変化させる
  syntax on
+
+set encoding=utf8
+set fenc=utf-8
+set fileencoding=utf-8:w
 set fileencodings=ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
 
 
