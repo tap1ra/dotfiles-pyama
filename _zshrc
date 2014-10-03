@@ -115,7 +115,7 @@ RPROMPT="[%*]"
 # -------------------------------------
 
 # -n 行数表示, -I バイナリファイル無視, svn関係のファイルを無視
-alias grep="grep --color -n -I --exclude='*.svn-*' --exclude='entries' --exclude='*/cache/*'"
+alias grep="grep -s --color -I --exclude='*.tar.gz' --exclude='*.svn-*' --exclude='entries' --exclude='*/cache/*'"
 
 # ls
 alias ls="ls -G" # color for darwin
@@ -126,6 +126,7 @@ alias l1="ls -1"
 # tree
 alias tree="tree -NC" # N: 文字化け対策, C:色をつける
 
+alias history="history -1000"
 
 # -------------------------------------
 # キーバインド
@@ -154,3 +155,5 @@ function chpwd() { ls }
 function title {
     echo -ne "\033]0;"$*"\007"
 }
+
+source ~/.env_file

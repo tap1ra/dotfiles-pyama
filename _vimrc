@@ -9,10 +9,16 @@ endif
 
 syntax on
 
+NeoBundle 'itchyny/lightline.vim'
+NeoBundle 'violetyk/cake.vim'
+NeoBundle 'majutsushi/tagbar'
+NeoBundle 'osyo-manga/vim-anzu'
 " ファイルオープンを便利に
 NeoBundle 'Shougo/unite.vim'
 " Unite.vimで最近使ったファイルを表示できるようにする
 NeoBundle 'Shougo/neomru.vim'
+
+NeoBundle 'Shougo/vimfiler'
 
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
 """"""""""""""""""""""""""""""
@@ -52,7 +58,6 @@ NeoBundle 'kana/vim-submode'
 autocmd QuickFixCmdPost *grep* cwindow
 
 " ステータス行に現在のgitブランチを表示する
-set statusline+=%{fugitive#statusline()}
 
 " Rails向けのコマンドを提供する
 NeoBundle 'tpope/vim-rails'
@@ -80,8 +85,6 @@ set tags=~/.tags
  set cmdheight=2
 " " エディタウィンドウの末尾から2行目にステータスラインを常時表示させる
  set laststatus=2
-" " ステータス行に現在のgitブランチを表示する
- set statusline+=%{fugitive#statusline()}
 " " ウインドウのタイトルバーにファイルのパス情報等を表示する
  set title
 " " コマンドラインモードで<Tab>キーによるファイル名補完を有効にする
@@ -127,13 +130,14 @@ set tags=~/.tags
  set whichwrap=b,s,h,l,<,>,[,]
 " " 構文毎に文字色を変化させる
  syntax on
+set backspace=indent,eol,start
 
 set encoding=utf8
 set fenc=utf-8
-set fileencoding=utf-8:w
+set fileencoding=utf-8
 set fileencodings=ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
-
-
+autocmd FileType php setl tabstop=4
+autocmd FileType php setl shiftwidth=4
 nnoremap s <Nop>
 nnoremap sj <C-w>j
 nnoremap sk <C-w>k
@@ -170,3 +174,81 @@ call submode#map('bufmove', 'n', '', '>', '<C-w>>')
 call submode#map('bufmove', 'n', '', '<', '<C-w><')
 call submode#map('bufmove', 'n', '', '+', '<C-w>+')
 call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+
+" light lineの設定
+
+let g:lightline = {
+      \ 'colorscheme': 'powerline',
+      \ 'mode_map': {'c': 'NORMAL'},
+      \ 'active': {
+      \   'left': [ ['mode', 'paste'], ['fugitive', 'filename', 'cakephp', 'currenttag', 'anzu'] ]
+      \ },
+      \ 'component': {
+      \   'lineinfo': ' %3l:%-2v',
+      \ },
+      \ 'component_function': {
+      \   'modified': 'MyModified',
+      \   'readonly': 'MyReadonly',
+      \   'fugitive': 'MyFugitive',
+      \   'filename': 'MyFilename',
+      \   'fileformat': 'MyFileformat',
+      \   'filetype': 'MyFiletype',
+      \   'fileencoding': 'MyFileencoding',
+      \   'mode': 'MyMode',
+      \   'anzu': 'anzu#search_status',
+      \   'currenttag': 'MyCurrentTag',
+      \   'cakephp': 'MyCakephp',
+      \ }
+      \ }
+
+
+function! MyModified()
+  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? ' ' : ''
+endfunction
+
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+  try
+    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head') && strlen(fugitive#head())
+      return ' ' . fugitive#head()
+    endif
+  catch
+  endtry
+  return ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! MyCurrentTag()
+  return tagbar#currenttag('%s', '')
+endfunction
+
+function! MyCakephp()
+  return exists('*cake#buffer') ? cake#buffer('type') : ''
+endfunction
