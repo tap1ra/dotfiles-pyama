@@ -115,13 +115,16 @@ RPROMPT="[%*]"
 # -------------------------------------
 
 # -n 行数表示, -I バイナリファイル無視, svn関係のファイルを無視
-alias grep="grep -s --color -I --exclude='*.tar.gz' --exclude='*.svn-*' --exclude='entries' --exclude='*/cache/*'"
+alias grep="egrep -s -I --color=always --exclude='*.tar.gz' --exclude='*.svn-*' --exclude='entries' --exclude='*/cache/*'"
 
 # ls
 alias ls="ls -G" # color for darwin
 alias l="ls -la"
 alias la="ls -la"
 alias l1="ls -1"
+
+#more
+alias more="more -R"
 
 # tree
 alias tree="tree -NC" # N: 文字化け対策, C:色をつける

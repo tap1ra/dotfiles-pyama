@@ -19,7 +19,8 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
 
 NeoBundle 'Shougo/vimfiler'
-
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'stephpy/vim-php-cs-fixer'
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
 """"""""""""""""""""""""""""""
 " Unit.vimの設定
@@ -32,7 +33,7 @@ noremap <C-P> :Unite buffer<CR>
 noremap <C-E> :NERDTree<CR>
 
 "タブ一覧
-noremap <C-T> :Unite tab<CR> 
+noremap <C-T> :Unite tab<CR>
 
 " ファイル一覧
 noremap <C-N> :Unite -buffer-name=file file<CR>
@@ -215,7 +216,7 @@ function! MyFilename()
         \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
         \  &ft == 'unite' ? unite#get_status_string() :
         \  &ft == 'vimshell' ? vimshell#get_status_string() :
-        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ '' != expand('%:p') ? expand('%:p') : '[No Name]') .
         \ ('' != MyModified() ? ' ' . MyModified() : '')
 endfunction
 
@@ -252,3 +253,24 @@ endfunction
 function! MyCakephp()
   return exists('*cake#buffer') ? cake#buffer('type') : ''
 endfunction
+
+"let g:php_cs_fixer_path = "/usr/local/bin/php-cs-fixer" " php-cs-fixerをインストールした場所を指定
+let g:php_cs_fixer_level = "all"                " which level ?
+let g:php_cs_fixer_config = "default"           " configuration
+let g:php_cs_fixer_php_path = "php"             " Path to PHP
+""let g:php_cs_fixer_fixers_list = ""             " List of fixers
+let g:php_cs_fixer_enable_default_mapping = 1   " Enable the mapping by default (<leader>pcd)
+let g:php_cs_fixer_dry_run = 0                  " Call command with dry-run option
+let g:php_cs_fixer_verbose = 0                  " Return the output of command if 1, else an inline information.
+
+nnoremap <silent><leader>pcd :call PhpCsFixerFixDirectory()<CR>
+nnoremap <silent><leader>pcf :call PhpCsFixerFixFile()<CR>
+
+" for syntastic  -----------------------
+let g:syntastic_mode_map = {
+  \ 'mode': 'active',
+  \ 'active_filetypes': ['php']
+  \}
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_php_checkers = ['phpcs']
+let g:syntastic_php_phpcs_args= '--standard=PSR2'

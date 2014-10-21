@@ -10,4 +10,4 @@
 	editor = vim -c \"set fenc=utf-8\"
 	pager = 
 [color]
-	ui = true
+	ui = always
