@@ -13,7 +13,12 @@ export EDITOR=/usr/local/bin/vim
 export PAGER=/usr/local/bin/vimpager
 export MANPAGER=/usr/local/bin/vimpager
 
-
+# パスの設定
+export PATH=/usr/local/opt:/opt/local/bin:/opt/local/sbin:/opt/local/include:$PATH
+export PATH=$PATH:~/pdig
+export RBENV_ROOT=/usr/local/var/rbenv
+# rbenvの設定
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # -------------------------------------
 # zshのオプション
 # -------------------------------------
@@ -102,13 +107,13 @@ function vcs_prompt_info() {
 # end VCS
 
 
-PROMPT=""
+PROMPT="[%*] "
 #PROMPT+="%(?.%F{green}$OK%f.%F{red}$NG%f) "
 PROMPT+="%F{blue}%~%f"
 PROMPT+="\$(vcs_prompt_info)"
 PROMPT+="%% "
 
-RPROMPT="[%*]"
+RPROMPT=""
 
 # -------------------------------------
 # エイリアス
@@ -160,3 +165,4 @@ function title {
 }
 
 source ~/.env_file
+

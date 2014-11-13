@@ -19,7 +19,6 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
 
 NeoBundle 'Shougo/vimfiler'
-NeoBundle 'scrooloose/syntastic'
 NeoBundle 'stephpy/vim-php-cs-fixer'
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
 """"""""""""""""""""""""""""""
@@ -165,6 +164,7 @@ nnoremap sq :<C-u>q<CR>
 nnoremap sQ :<C-u>bd<CR>
 nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+nnoremap x "_x
 
 
 call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
@@ -265,12 +265,11 @@ let g:php_cs_fixer_verbose = 0                  " Return the output of command i
 
 nnoremap <silent><leader>pcd :call PhpCsFixerFixDirectory()<CR>
 nnoremap <silent><leader>pcf :call PhpCsFixerFixFile()<CR>
-
 " for syntastic  -----------------------
-let g:syntastic_mode_map = {
-  \ 'mode': 'active',
-  \ 'active_filetypes': ['php']
-  \}
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_php_checkers = ['phpcs']
-let g:syntastic_php_phpcs_args= '--standard=PSR2'
+""let g:syntastic_mode_map = {
+"  \ 'mode': 'active',
+"  \ 'active_filetypes': ['php']
+"  \}
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_php_checkers = ['phpcs']
+"let g:syntastic_php_phpcs_args= '--standard=PSR2'
