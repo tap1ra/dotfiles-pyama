@@ -20,6 +20,10 @@ NeoBundle 'Shougo/neomru.vim'
 
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'stephpy/vim-php-cs-fixer'
+
+NeoBundle 'xolox/vim-session', {
+              \ 'depends' : 'xolox/vim-misc',
+                        \ }
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
 """"""""""""""""""""""""""""""
 " Unit.vimの設定
@@ -138,6 +142,8 @@ set fileencoding=utf-8
 set fileencodings=ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
 autocmd FileType php setl tabstop=4
 autocmd FileType php setl shiftwidth=4
+autocmd FileType php setl fenc=euc-jp
+
 nnoremap s <Nop>
 nnoremap sj <C-w>j
 nnoremap sk <C-w>k
@@ -147,8 +153,8 @@ nnoremap sJ <C-w>J
 nnoremap sK <C-w>K
 nnoremap sL <C-w>L
 nnoremap sH <C-w>H
-nnoremap sn gt
-nnoremap sp gT
+nnoremap sl gt
+nnoremap sh gT
 nnoremap sr <C-w>r
 nnoremap s= <C-w>=
 nnoremap sw <C-w>w
@@ -273,3 +279,6 @@ nnoremap <silent><leader>pcf :call PhpCsFixerFixFile()<CR>
 "let g:syntastic_auto_loc_list = 1
 "let g:syntastic_php_checkers = ['phpcs']
 "let g:syntastic_php_phpcs_args= '--standard=PSR2'
+"
+"
+

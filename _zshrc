@@ -136,6 +136,9 @@ alias tree="tree -NC" # N: 文字化け対策, C:色をつける
 
 alias history="history -1000"
 
+alias be='bundle exec'
+
+alias gitlog='git log | more'
 # -------------------------------------
 # キーバインド
 # -------------------------------------
