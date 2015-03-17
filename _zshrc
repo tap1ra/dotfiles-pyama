@@ -16,7 +16,15 @@ export MANPAGER=/usr/local/bin/vimpager
 # パスの設定
 export PATH=/usr/local/opt:/opt/local/bin:/opt/local/sbin:/opt/local/include:$PATH
 export PATH=$PATH:~/pdig
-export RBENV_ROOT=/usr/local/var/rbenv
+
+#rbenv
+export RBENV_ROOT="/usr/local/var/rbenv"
+PATH="$RBENV_ROOT/bin:$PATH"
+#
+##phpenv
+export PATH="$HOME/.phpenv/bin:$PATH"
+eval "$(phpenv init -)"
+
 # rbenvの設定
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # -------------------------------------
@@ -168,4 +176,3 @@ function title {
 }
 
 source ~/.env_file
-

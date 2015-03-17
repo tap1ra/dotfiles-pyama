@@ -13,6 +13,7 @@ NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'violetyk/cake.vim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'osyo-manga/vim-anzu'
+NeoBundle 'osyo-manga/vim-anzu'
 " ファイルオープンを便利に
 NeoBundle 'Shougo/unite.vim'
 " Unite.vimで最近使ったファイルを表示できるようにする
@@ -20,7 +21,7 @@ NeoBundle 'Shougo/neomru.vim'
 
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'stephpy/vim-php-cs-fixer'
-
+NeoBundle 'nrocco/vim-phplint'
 NeoBundle 'xolox/vim-session', {
               \ 'depends' : 'xolox/vim-misc',
                         \ }
@@ -75,11 +76,23 @@ NeoBundle 'vim-scripts/AnsiEsc.vim'
 " 行末の半角スペースを可視化
 NeoBundle 'bronson/vim-trailing-whitespace'
 
+" 保存時にphplintを実行する
+
+function! s:remove_dust()
+    let cursor = getpos(".")
+    " 保存時に行末の空白を除去する
+    %s/\s\+$//ge
+    " 保存時にtabを2スペースに変換する
+    %s/\t/  /ge
+    call setpos(".", cursor)
+    unlet cursor
+endfunction
 """"""""""""""""""""""""""""""
 " 各種オプションの設定
 " """"""""""""""""""""""""""""""
 " " タグファイルの指定(でもタグジャンプは使ったことがない)
 set tags=~/.tags
+
 " "
 " スワップファイルは使わない(ときどき面倒な警告が出るだけで役に立ったことがない)
  set noswapfile
@@ -136,13 +149,13 @@ set tags=~/.tags
  syntax on
 set backspace=indent,eol,start
 
-set encoding=utf8
-set fenc=utf-8
-set fileencoding=utf-8
+"set encoding=utf8
+"set fenc=utf-8
+"set fileencoding=utf-8
 set fileencodings=ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
 autocmd FileType php setl tabstop=4
 autocmd FileType php setl shiftwidth=4
-autocmd FileType php setl fenc=euc-jp
+"autocmd FileType php setl fenc=euc-jp
 
 nnoremap s <Nop>
 nnoremap sj <C-w>j
@@ -154,6 +167,9 @@ nnoremap sK <C-w>K
 nnoremap sL <C-w>L
 nnoremap sH <C-w>H
 nnoremap sl gt
+nnoremap gg zg
+nnoremap gl ]s
+nnoremap gh [s
 nnoremap sh gT
 nnoremap sr <C-w>r
 nnoremap s= <C-w>=
@@ -260,25 +276,5 @@ function! MyCakephp()
   return exists('*cake#buffer') ? cake#buffer('type') : ''
 endfunction
 
-"let g:php_cs_fixer_path = "/usr/local/bin/php-cs-fixer" " php-cs-fixerをインストールした場所を指定
-let g:php_cs_fixer_level = "all"                " which level ?
-let g:php_cs_fixer_config = "default"           " configuration
-let g:php_cs_fixer_php_path = "php"             " Path to PHP
-""let g:php_cs_fixer_fixers_list = ""             " List of fixers
-let g:php_cs_fixer_enable_default_mapping = 1   " Enable the mapping by default (<leader>pcd)
-let g:php_cs_fixer_dry_run = 0                  " Call command with dry-run option
-let g:php_cs_fixer_verbose = 0                  " Return the output of command if 1, else an inline information.
-
-nnoremap <silent><leader>pcd :call PhpCsFixerFixDirectory()<CR>
-nnoremap <silent><leader>pcf :call PhpCsFixerFixFile()<CR>
-" for syntastic  -----------------------
-""let g:syntastic_mode_map = {
-"  \ 'mode': 'active',
-"  \ 'active_filetypes': ['php']
-"  \}
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_php_checkers = ['phpcs']
-"let g:syntastic_php_phpcs_args= '--standard=PSR2'
-"
-"
-
+autocmd BufWritePre * call <SID>remove_dust()
+autocmd BufWritePost * :Phplint
