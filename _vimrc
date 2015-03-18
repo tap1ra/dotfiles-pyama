@@ -7,18 +7,25 @@ if has('vim_starting')
   call neobundle#rc(expand('~/.vim/bundle/'))
 endif
 
-
+syntax on
+NeoBundle 'tpope/vim-obsession'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'violetyk/cake.vim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'osyo-manga/vim-anzu'
 NeoBundle 'vobornik/vim-mql4'
+NeoBundle 'osyo-manga/vim-anzu'
 " ファイルオープンを便利に
 NeoBundle 'Shougo/unite.vim'
 " Unite.vimで最近使ったファイルを表示できるようにする
 NeoBundle 'Shougo/neomru.vim'
 
 NeoBundle 'Shougo/vimfiler'
+NeoBundle 'stephpy/vim-php-cs-fixer'
+NeoBundle 'nrocco/vim-phplint'
+NeoBundle 'xolox/vim-session', {
+              \ 'depends' : 'xolox/vim-misc',
+                        \ }
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
 """"""""""""""""""""""""""""""
 " Unit.vimの設定
@@ -70,11 +77,23 @@ NeoBundle 'vim-scripts/AnsiEsc.vim'
 " 行末の半角スペースを可視化
 NeoBundle 'bronson/vim-trailing-whitespace'
 
+" 保存時にphplintを実行する
+
+function! s:remove_dust()
+    let cursor = getpos(".")
+    " 保存時に行末の空白を除去する
+    %s/\s\+$//ge
+    " 保存時にtabを2スペースに変換する
+    %s/\t/  /ge
+    call setpos(".", cursor)
+    unlet cursor
+endfunction
 """"""""""""""""""""""""""""""
 " 各種オプションの設定
 " """"""""""""""""""""""""""""""
 " " タグファイルの指定(でもタグジャンプは使ったことがない)
 set tags=~/.tags
+
 " "
 " スワップファイルは使わない(ときどき面倒な警告が出るだけで役に立ったことがない)
  set noswapfile
@@ -137,6 +156,8 @@ set fileencoding=utf-8
 set fileencodings=utf-8,ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
 autocmd FileType php setl tabstop=4
 autocmd FileType php setl shiftwidth=4
+"autocmd FileType php setl fenc=euc-jp
+
 nnoremap s <Nop>
 nnoremap sj <C-w>j
 nnoremap sk <C-w>k
@@ -147,6 +168,9 @@ nnoremap sK <C-w>K
 nnoremap sL <C-w>L
 nnoremap sH <C-w>H
 nnoremap sl gt
+nnoremap gg zg
+nnoremap gl ]s
+nnoremap gh [s
 nnoremap sh gT
 nnoremap sr <C-w>r
 nnoremap s= <C-w>=
@@ -163,6 +187,7 @@ nnoremap sq :<C-u>q<CR>
 nnoremap sQ :<C-u>bd<CR>
 nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+nnoremap x "_x
 
 
 call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
@@ -180,9 +205,10 @@ let g:lightline = {
       \ 'colorscheme': 'powerline',
       \ 'mode_map': {'c': 'NORMAL'},
       \ 'active': {
-      \   'left': [ ['mode', 'paste'], ['fugitive', 'filename', 'cakephp', 'currenttag', 'anzu'] ]
+      \   'left': [ ['mode', 'paste'],['fugitive', 'filename', 'cakephp', 'currenttag', 'anzu'],['cd']]
       \ },
       \ 'component': {
+      \   'cd': '%.35(%{fnamemodify(getcwd(), ":~")}%)',
       \   'lineinfo': ' %3l:%-2v',
       \ },
       \ 'component_function': {
@@ -286,7 +312,7 @@ function! s:Mq4Ea()
   let comp_result  =  system('wine ~/Dropbox/WEB/秀丸/mql.exe /i:' . wine_mt4 . ' ' . target)
 
   let result = system('cp ' .  binary . ' ' . drop_experts . 'TEST_EA.ex4')
-  :echo comp_result 
+  :echo comp_result
 
 endfunction
 
@@ -309,3 +335,10 @@ function! s:Mq4Indi()
 
   let result = system('cp ' .  binary . ' ' . drop_experts . 'TEST_INDI.ex4')
 endfunction
+"保存時に空白削除とシンタックスチェック
+autocmd BufWritePre * call <SID>remove_dust()
+autocmd BufWritePost * :Phplint
+
+
+set clipboard+=unnamed
+set clipboard+=autoselect

@@ -13,7 +13,20 @@ export EDITOR=/usr/local/bin/vim
 export PAGER=/usr/local/bin/vimpager
 export MANPAGER=/usr/local/bin/vimpager
 
+# パスの設定
+export PATH=/usr/local/opt:/opt/local/bin:/opt/local/sbin:/opt/local/include:$PATH
+export PATH=$PATH:~/pdig
 
+#rbenv
+export RBENV_ROOT="/usr/local/var/rbenv"
+PATH="$RBENV_ROOT/bin:$PATH"
+#
+##phpenv
+export PATH="$HOME/.phpenv/bin:$PATH"
+eval "$(phpenv init -)"
+
+# rbenvの設定
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # -------------------------------------
 # zshのオプション
 # -------------------------------------
@@ -101,13 +114,13 @@ function vcs_prompt_info() {
 # end VCS
 
 
-PROMPT=""
+PROMPT="[%*] "
 #PROMPT+="%(?.%F{green}$OK%f.%F{red}$NG%f) "
 PROMPT+="%F{blue}%~%f"
 PROMPT+="\$(vcs_prompt_info)"
 PROMPT+="%% "
 
-RPROMPT="[%*]"
+RPROMPT=""
 
 # -------------------------------------
 # エイリアス
@@ -131,6 +144,9 @@ alias tree="tree -NC" # N: 文字化け対策, C:色をつける
 alias history="history -1000"
 alias be="bundle exec"
 setopt share_history
+
+
+alias gitlog='git log | more'
 # -------------------------------------
 # キーバインド
 # -------------------------------------
