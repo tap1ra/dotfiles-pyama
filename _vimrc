@@ -7,12 +7,12 @@ if has('vim_starting')
   call neobundle#rc(expand('~/.vim/bundle/'))
 endif
 
-syntax on
 
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'violetyk/cake.vim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'osyo-manga/vim-anzu'
+NeoBundle 'vobornik/vim-mql4'
 " ファイルオープンを便利に
 NeoBundle 'Shougo/unite.vim'
 " Unite.vimで最近使ったファイルを表示できるようにする
@@ -134,7 +134,7 @@ set backspace=indent,eol,start
 set encoding=utf8
 set fenc=utf-8
 set fileencoding=utf-8
-set fileencodings=ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
+set fileencodings=utf-8,ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
 autocmd FileType php setl tabstop=4
 autocmd FileType php setl shiftwidth=4
 nnoremap s <Nop>
@@ -146,8 +146,8 @@ nnoremap sJ <C-w>J
 nnoremap sK <C-w>K
 nnoremap sL <C-w>L
 nnoremap sH <C-w>H
-nnoremap sn gt
-nnoremap sp gT
+nnoremap sl gt
+nnoremap sh gT
 nnoremap sr <C-w>r
 nnoremap s= <C-w>=
 nnoremap sw <C-w>w
@@ -250,4 +250,62 @@ endfunction
 
 function! MyCakephp()
   return exists('*cake#buffer') ? cake#buffer('type') : ''
+endfunction
+
+command! EA call s:EA()
+nmap <F1> :EA<CR>
+function! s:EA()
+  let e = expand("%:e")
+  if e == "mq4"
+    :Mq4Ea
+  endif
+
+endfunction
+
+command! INDI call s:INDI()
+nmap <F2> :INDI<CR>
+function! s:INDI()
+  let e = expand("%:e")
+  if e == "mq4"
+    :Mq4Indi
+  endif
+
+endfunction
+command! Mq4Ea call s:Mq4Ea()
+function! s:Mq4Ea()
+  let wine_mt4      = 'C:\\Program\ Files\\FXDD\ Malta\ -\ MetaTrader\ 4\\MQL4'
+  let wine_dropbox  = 'Z:\\Users\\yamashitakazuhiko\\Dropbox'
+  let drop_experts  = '~/Dropbox/template/Experts/'
+  let paths         =  split(expand("%:p"),"/")
+  let month         = paths[3]
+  let customer_name = paths[4]
+  let fname         = substitute(paths[6],' ','\\ ','g')
+  " コンパイルするファイル
+  let target        = wine_dropbox . '\\'. month .'\\' . customer_name.  '\\src\\' . fname
+  let binary =  expand("%:p:h") . '/' . expand("%:r") . '.ex4'
+  let comp_result  =  system('wine ~/Dropbox/WEB/秀丸/mql.exe /i:' . wine_mt4 . ' ' . target)
+
+  let result = system('cp ' .  binary . ' ' . drop_experts . 'TEST_EA.ex4')
+  :echo comp_result 
+
+endfunction
+
+command! Mq4Indi call s:Mq4Indi()
+function! s:Mq4Indi()
+  let wine_mt4      = 'C:\\Program\ Files\\FXDD\ Malta\ -\ MetaTrader\ 4\\MQL4'
+  let wine_dropbox  = 'Z:\\Users\\yamashitakazuhiko\\Dropbox'
+  let drop_experts  = '~/Dropbox/template/Indicators/'
+  let paths         =  split(expand("%:p"),"/")
+  let month         = paths[3]
+  let customer_name = paths[4]
+  let fname         = substitute(paths[6],' ','\\ ','g')
+
+  " コンパイルするファイル
+  let target        = wine_dropbox . '\\'. month .'\\' . customer_name.  '\\src\\' . fname
+  let binary =  expand("%:p:h") . '/' . expand("%:r") . '.ex4'
+
+  let comp_result  =  system('wine ~/Dropbox/WEB/秀丸/mql.exe /i:' . wine_mt4 . ' ' . target)
+  :echo comp_result
+
+  let result = system('cp ' .  binary . ' ' . drop_experts . 'TEST_INDI.ex4')
 endfunction
