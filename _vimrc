@@ -8,7 +8,7 @@ if has('vim_starting')
 endif
 
 syntax on
-
+NeoBundle 'tpope/vim-obsession'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'violetyk/cake.vim'
 NeoBundle 'majutsushi/tagbar'
@@ -204,9 +204,10 @@ let g:lightline = {
       \ 'colorscheme': 'powerline',
       \ 'mode_map': {'c': 'NORMAL'},
       \ 'active': {
-      \   'left': [ ['mode', 'paste'], ['fugitive', 'filename', 'cakephp', 'currenttag', 'anzu'] ]
+      \   'left': [ ['mode', 'paste'],['fugitive', 'filename', 'cakephp', 'currenttag', 'anzu'],['cd']]
       \ },
       \ 'component': {
+      \   'cd': '%.35(%{fnamemodify(getcwd(), ":~")}%)',
       \   'lineinfo': ' %3l:%-2v',
       \ },
       \ 'component_function': {
@@ -276,5 +277,10 @@ function! MyCakephp()
   return exists('*cake#buffer') ? cake#buffer('type') : ''
 endfunction
 
+"保存時に空白削除とシンタックスチェック
 autocmd BufWritePre * call <SID>remove_dust()
 autocmd BufWritePost * :Phplint
+
+
+set clipboard+=unnamed
+set clipboard+=autoselect
