@@ -15,18 +15,12 @@ export MANPAGER=/usr/local/bin/vimpager
 
 # パスの設定
 export PATH=/usr/local/opt:/opt/local/bin:/opt/local/sbin:/opt/local/include:$PATH
-export PATH=$PATH:~/pdig
 
 #rbenv
 export RBENV_ROOT="/usr/local/var/rbenv"
 PATH="$RBENV_ROOT/bin:$PATH"
-#
-##phpenv
-export PATH="$HOME/.phpenv/bin:$PATH"
-eval "$(phpenv init -)"
-
-# rbenvの設定
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
 # -------------------------------------
 # zshのオプション
 # -------------------------------------
@@ -34,9 +28,6 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 ## 補完機能の強化
 autoload -U compinit
 compinit
-
-## 入力しているコマンド名が間違っている場合にもしかして：を出す。
-setopt correct
 
 # ビープを鳴らさない
 setopt nobeep
@@ -132,8 +123,6 @@ alias grep="egrep -s -I --color=always --exclude='*.tar.gz' --exclude='*.svn-*' 
 
 # ls
 alias ls="ls -G" # color for darwin
-alias l="ls -la"
-alias la="ls -la"
 alias l1="ls -1"
 
 #more
@@ -167,12 +156,8 @@ bindkey "^R" history-incremental-search-backward
 # その他
 # -------------------------------------
 
-# cdしたあとで、自動的に ls する
-function chpwd() { ls }
-
 # iTerm2のタブ名を変更する
 function title {
     echo -ne "\033]0;"$*"\007"
 }
 
-source ~/.env_file
