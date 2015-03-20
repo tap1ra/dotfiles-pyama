@@ -342,3 +342,7 @@ autocmd BufWritePost * :Phplint
 
 set clipboard+=unnamed
 set clipboard+=autoselect
+
+"スペルチェック
+set spell
+set spelllang+=cjk
