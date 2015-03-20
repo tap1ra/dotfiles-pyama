@@ -76,13 +76,13 @@
 	<key>VisualBell</key>
 	<false/>
 	<key>columnCount</key>
-	<integer>270</integer>
+	<integer>200</integer>
 	<key>fontAllowsDisableAntialias</key>
 	<integer>0</integer>
 	<key>name</key>
 	<string>Ocean</string>
 	<key>rowCount</key>
-	<integer>70</integer>
+	<integer>60</integer>
 	<key>type</key>
 	<string>Window Settings</string>
 	<key>useOptionAsMetaKey</key>
