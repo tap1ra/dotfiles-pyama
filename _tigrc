@@ -1,6 +1,6 @@
 bind main    R !git rebase -i %(commit)
 bind status  A !git commit --amend
-bind main    P !git push origin
+bind status  P !git push origin
 bind generic L :toggle split-view-width -10%   # Decrease split height
 bind generic H :toggle split-view-width +10%   # Decrease split height
 
