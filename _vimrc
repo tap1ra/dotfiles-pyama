@@ -41,8 +41,9 @@ noremap :uff :<C-u>UniteWithBufferDir file -buffer-name=file<CR>
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
 
+" 削除時にヤンクしない
 nnoremap x "_x
-nnoremap d "_d
+"nnoremap d "_d
 """"""""""""""""""""""""""""""
 
 " ファイルをtree表示してくれる
