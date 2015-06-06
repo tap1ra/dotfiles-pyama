@@ -6,6 +6,7 @@ if has('vim_starting')
   call neobundle#rc(expand('~/.vim/bundle/'))
 endif
 syntax on
+
 NeoBundle 'tpope/vim-obsession'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'violetyk/cake.vim'
@@ -120,6 +121,9 @@ endfunction
  syntax on
 set backspace=indent,eol,start
 
+" 大文字小文字を無視して検索
+set ignorecase
+
 set encoding=utf8
 set fenc=utf-8
 set fileencoding=utf-8
@@ -224,9 +228,6 @@ endfunction
 "保存時に空白削除とシンタックスチェック
 "autocmd BufWritePre * call <SID>remove_dust()
 autocmd BufWritePost * :Phplint
-
-set clipboard+=unnamed
-set clipboard+=autoselect
 
 "スペルチェック
 set spell
