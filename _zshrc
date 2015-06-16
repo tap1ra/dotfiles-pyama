@@ -4,6 +4,7 @@
 ZSH=$HOME/.oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 plugins=(git ruby gem brew vi-mode vagrant osx fabric deb compleat rbenv)
+ZSH_THEME="mh"
 # wget http://mimosa-pudica.net/src/incr-0.2.zsh
 
 # SSHで接続した先で日本語が使えるようにする
@@ -28,7 +29,6 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # -------------------------------------
 # zshのオプション
 # -------------------------------------
-
 ## 補完機能の強化
 autoload -Uz compinit
 compinit -u
@@ -48,7 +48,6 @@ zstyle ':completion:*' verbose yes # 詳細な情報
 zstyle ':completion:*' list-separator '-->'
 zstyle ':completion:*:manuals' separate-sections true
 
-
 setopt APPEND_HISTORY         # .zsh-history を上書きではなく追加
 setopt AUTO_CD                # ディレクトリ名だけを入力した時にそこに cd する
 setopt AUTO_LIST              # 候補が複数ある時に自動的に一覧を出す
@@ -59,7 +58,7 @@ setopt AUTO_RESUME            # サスペンド中のプロセスと同じコマ
 setopt CHECK_JOBS             # シェルを抜ける (exit) 時に、zsh: you have runnning jobs と警告を出す
 setopt EXTENDED_GLOB          # ファイル名で #, ~, ^ の 3 文字を正規表現として扱う
 setopt EXTENDED_HISTORY       # zsh の開始, 終了時刻をヒストリファイルに書き込む
-setopt GLOB_DOTS              # . で開始するファイル名にマッチさせるとき、先頭に明示的に . を指定する必要がなくなる。
+#setopt GLOB_DOTS              # . で開始するファイル名にマッチさせるとき、先頭に明示的に . を指定する必要がなくなる。
 setopt HASH_CMDS              # 各コマンドが実行されるときにパスをハッシュに入れる
 setopt HIST_EXPIRE_DUPS_FIRST # ヒストリリストに追加されるコマンド行が古いものと同じなら古いものを削除する
 setopt HIST_NO_STORE          # history コマンドを history に保存しない
@@ -68,12 +67,12 @@ setopt HIST_REDUCE_BLANKS     # 余分な空白は詰めて記録
 setopt HIST_SAVE_NO_DUPS      # ヒストリファイルに書き出すときに、古いコマンドと同じものは無視する
 setopt INC_APPEND_HISTORY     # 履歴をインクリメンタルに追加
 setopt LIST_TYPES             # 補完候補一覧でファイルの種別をマーク表示
-setopt MARK_DIRS              # ファイル名の展開でディレクトリにマッチした場合 末尾に / を付加
+#setopt MARK_DIRS              # ファイル名の展開でディレクトリにマッチした場合 末尾に / を付加
 setopt NUMERIC_GLOB_SORT      # 数字を数値と解釈してソートする
 setopt NOBEEP                 # ビープを鳴らさない
 setopt NO_FLOW_CONTROL        # disable C-q, C-s
 setopt PROMPT_SUBST           # PROMPT 変数に対して変数展開、コマンド置換、算術展開を施す
-setopt RM_STAR_WAIT           # rm * を実行する前に確認
+#setopt RM_STAR_WAIT           # rm * を実行する前に確認
 setopt SHARE_HISTORY          # 履歴の共有
 setopt AUTOPUSHD              # cd 時に自動で push
 setopt PUSHD_IGNORE_DUPS      # 同じディレクトリを pushd しない
@@ -88,7 +87,6 @@ setopt GLOB_COMPLETE          # globを展開しないで候補の一覧から�
 setopt HIST_EXPAND            # 補完時にヒストリを自動的に展開する。
 setopt NO_BEEP                # 補完候補がないときなどにビープ音を鳴らさない。
 setopt BRACE_CCL              # {a-c} を a b c に展開する機能を使えるようにする
-
 
 bindkey "^I" menu-complete   # 展開する前に補完候補を出させる(Ctrl-iで補完するようにする)
 
@@ -154,7 +152,7 @@ autoload -Uz vcs_info
 autoload -Uz is-at-least
 
 # begin VCS
-zstyle ":vcs_info:*" enable git svn hg bzr
+zstyle ":vcs_info:*" enable git
 zstyle ":vcs_info:*" formats "(%s)-[%b]"
 zstyle ":vcs_info:*" actionformats "(%s)-[%b|%a]"
 zstyle ":vcs_info:(svn|bzr):*" branchformat "%b:r%r"
@@ -175,7 +173,6 @@ function vcs_prompt_info() {
     [[ -n "$vcs_info_msg_0_" ]] && echo -n " %{$fg[yellow]%}$vcs_info_msg_0_%f"
 }
 # end VCS
-
 
 PROMPT="[%*] "
 PROMPT+="%F{blue}%~%f"
@@ -278,42 +275,4 @@ function peco-keypass() {
     fi
 }
 zle -N peco-keypass
-
 bindkey '^l' peco-keypass
-# SSH_AUTH_SOCK
-if [ "$SSH_AUTH_SOCK" = "" ];then
-  sock_tmp=(`ls -t /tmp/com.apple.launchd.*/Listeners 2>/dev/null`)
-  if [ ${#sock_tmp[@]} -eq 0 ];then
-    # For Mavericks or older OS X
-    sock_tmp=(`ls -t /tmp/launchd-*/Listeners 2>/dev/null`)
-  fi
-  for s in ${sock_tmp[@]};do
-    export SSH_AUTH_SOCK=$s
-    ssh-add -l >& /dev/null
-    ret=$?
-    if [ $ret -eq 0 -o $ret -eq 1 ];then
-      break
-    fi
-    unset SSH_AUTH_SOCK
-  done
-  unset sock_tmp
-fi
-
-if [ -n "${TMUX}" ]; then  
-  # 既存のシェルの SSH_AUTH_SOCK を更新
-  function update_ssh_auth_sock() {
-    NEWVAL=`tmux show-environment | grep "^SSH_AUTH_SOCK" | cut -d"=" -f2`
-    if [ -n "${NEWVAL}" ]; then
-      SSH_AUTH_SOCK=${NEWVAL}
-    fi
-  }
-
-  # widget 化する
-  zle -N update_ssh_auth_sock
-
-  # ショートカットキー割り当て
-  bindkey "^h" update_ssh_auth_sock
-fi 
-
-# added by travis gem
-[ -f /Users/yamashitakazuhiko/.travis/travis.sh ] && source /Users/yamashitakazuhiko/.travis/travis.sh
