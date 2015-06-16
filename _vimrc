@@ -1,12 +1,23 @@
 set number
-set nocompatible
-filetype off
-if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim
-  call neobundle#rc(expand('~/.vim/bundle/'))
-endif
-syntax on
 
+ " Note: Skip initialization for vim-tiny or vim-small.
+ if 0 | endif
+
+ if has('vim_starting')
+   if &compatible
+     set nocompatible               " Be iMproved
+   endif
+
+   " Required:
+   set runtimepath+=~/.vim/bundle/neobundle.vim/
+ endif
+
+ " Required:
+ call neobundle#begin(expand('~/.vim/bundle/'))
+
+ " Let NeoBundle manage NeoBundle
+ " Required:
+NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'tpope/vim-obsession'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'violetyk/cake.vim'
@@ -19,9 +30,23 @@ NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'stephpy/vim-php-cs-fixer'
 NeoBundle 'nrocco/vim-phplint'
-NeoBundle 'xolox/vim-session', {
-  \ 'depends' : 'xolox/vim-misc',
-\ }
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'tomtom/tcomment_vim'
+NeoBundle 'vim-scripts/AnsiEsc.vim'
+NeoBundle 'bronson/vim-trailing-whitespace'
+
+ " My Bundles here:
+ " Refer to |:NeoBundle-examples|.
+ " Note: You don't set neobundle setting in .gvimrc!
+
+ call neobundle#end()
+
+ " Required:
+ filetype plugin indent on
+
+ " If there are uninstalled bundles found on startup,
+ " this will conveniently prompt you to install them.
+ NeoBundleCheck
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
 """"""""""""""""""""""""""""""
 " Unit.vimの設定
@@ -31,7 +56,7 @@ noremap <C-P> :Unite buffer<CR>
 "ツリー
 noremap <C-E> :NERDTree<CR>
 "タブ一覧
-noremap <C-T> :Unite tab<CR>
+noremap <C-W> :Unite tab<CR>
 " ファイル一覧
 noremap <C-N> :Unite -buffer-name=file file<CR>
 " 最近使ったファイルの一覧
@@ -47,14 +72,6 @@ nnoremap x "_x
 "nnoremap d "_d
 """"""""""""""""""""""""""""""
 
-" ファイルをtree表示してくれる
-NeoBundle 'scrooloose/nerdtree'
-" コメントON/OFFを手軽に実行
-NeoBundle 'tomtom/tcomment_vim'
-" ログファイルを色づけしてくれる
-NeoBundle 'vim-scripts/AnsiEsc.vim'
-" 行末の半角スペースを可視化
-NeoBundle 'bronson/vim-trailing-whitespace'
 
 function! s:remove_dust()
     let cursor = getpos(".")
@@ -227,11 +244,13 @@ endfunction
 
 "保存時に空白削除とシンタックスチェック
 "autocmd BufWritePre * call <SID>remove_dust()
-autocmd BufWritePost * :Phplint
+"autocmd BufWritePost * :Phplint
 
 "スペルチェック
 set spell
 set spelllang+=cjk
+
+set clipboard=unnamed
 
 "neocomplete
 " Disable AutoComplPop.
