@@ -1,13 +1,12 @@
 set number
-set nocompatible               " be iMproved
+set nocompatible
 filetype off
-
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim
   call neobundle#rc(expand('~/.vim/bundle/'))
 endif
-
 syntax on
+
 NeoBundle 'tpope/vim-obsession'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'violetyk/cake.vim'
@@ -15,31 +14,25 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'osyo-manga/vim-anzu'
 NeoBundle 'vobornik/vim-mql4'
 NeoBundle 'osyo-manga/vim-anzu'
-" ファイルオープンを便利に
 NeoBundle 'Shougo/unite.vim'
-" Unite.vimで最近使ったファイルを表示できるようにする
 NeoBundle 'Shougo/neomru.vim'
-
+NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'stephpy/vim-php-cs-fixer'
 NeoBundle 'nrocco/vim-phplint'
 NeoBundle 'xolox/vim-session', {
-              \ 'depends' : 'xolox/vim-misc',
-                        \ }
+  \ 'depends' : 'xolox/vim-misc',
+\ }
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
 """"""""""""""""""""""""""""""
 " Unit.vimの設定
 """"""""""""""""""""""""""""""
-
 " バッファ一覧
 noremap <C-P> :Unite buffer<CR>
-
 "ツリー
 noremap <C-E> :NERDTree<CR>
-
 "タブ一覧
 noremap <C-T> :Unite tab<CR>
-
 " ファイル一覧
 noremap <C-N> :Unite -buffer-name=file file<CR>
 " 最近使ったファイルの一覧
@@ -50,34 +43,19 @@ noremap :uff :<C-u>UniteWithBufferDir file -buffer-name=file<CR>
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
 
+" 削除時にヤンクしない
+nnoremap x "_x
+"nnoremap d "_d
 """"""""""""""""""""""""""""""
 
 " ファイルをtree表示してくれる
 NeoBundle 'scrooloose/nerdtree'
-
-" Gitを便利に使う
-NeoBundle 'tpope/vim-fugitive'
-
-NeoBundle 'kana/vim-submode'
-
-" grep検索の実行後にQuickFix Listを表示する
-autocmd QuickFixCmdPost *grep* cwindow
-
-" ステータス行に現在のgitブランチを表示する
-
-" Rails向けのコマンドを提供する
-NeoBundle 'tpope/vim-rails'
-
 " コメントON/OFFを手軽に実行
 NeoBundle 'tomtom/tcomment_vim'
-
 " ログファイルを色づけしてくれる
 NeoBundle 'vim-scripts/AnsiEsc.vim'
-
 " 行末の半角スペースを可視化
 NeoBundle 'bronson/vim-trailing-whitespace'
-
-" 保存時にphplintを実行する
 
 function! s:remove_dust()
     let cursor = getpos(".")
@@ -88,13 +66,10 @@ function! s:remove_dust()
     call setpos(".", cursor)
     unlet cursor
 endfunction
+
 """"""""""""""""""""""""""""""
 " 各種オプションの設定
 " """"""""""""""""""""""""""""""
-" " タグファイルの指定(でもタグジャンプは使ったことがない)
-set tags=~/.tags
-
-" "
 " スワップファイルは使わない(ときどき面倒な警告が出るだけで役に立ったことがない)
  set noswapfile
 " " カーソルが何行目の何列目に置かれているかを表示する
@@ -109,17 +84,14 @@ set tags=~/.tags
  set wildmenu
 " " 入力中のコマンドを表示する
  set showcmd
-" " バックアップディレクトリの指定(でもバックアップは使ってない)
+" " バックアップディレクトリの指定
  set backupdir=$HOME/.vimbackup
-" "
 " バッファで開いているファイルのディレクトリでエクスクローラを開始する(でもエクスプローラって使ってない)
  set browsedir=buffer
 " " 小文字のみで検索したときに大文字小文字を無視する
  set smartcase
 " " 検索結果をハイライト表示する
  set hlsearch
-" " 暗い背景色に合わせた配色にする
-" set background=dark
 " " タブ入力を複数の空白入力に置き換える
  set expandtab
 " " 検索ワードの最初の文字を入力した時点で検索を開始する
@@ -150,54 +122,29 @@ set tags=~/.tags
  syntax on
 set backspace=indent,eol,start
 
+" 大文字小文字を無視して検索
+set ignorecase
+
 set encoding=utf8
 set fenc=utf-8
 set fileencoding=utf-8
-set fileencodings=utf-8,ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
+set fileencodings=ucs-bom,iso-2022-jp,utf-8,cp932,euc-jp,default,latin
 autocmd FileType php setl tabstop=4
 autocmd FileType php setl shiftwidth=4
-"autocmd FileType php setl fenc=euc-jp
+autocmd FileType php setl fenc=euc-jp
+autocmd FileType js  setl tabstop=4
+autocmd FileType js  setl shiftwidth=4
+autocmd FileType js  setl fenc=utf-8
+autocmd FileType rb  setl tabstop=2
+autocmd FileType rb  setl shiftwidth=2
+autocmd FileType rb  setl fenc=utf-8
 
-nnoremap s <Nop>
-nnoremap sj <C-w>j
-nnoremap sk <C-w>k
-nnoremap sl <C-w>l
-nnoremap sh <C-w>h
-nnoremap sJ <C-w>J
-nnoremap sK <C-w>K
-nnoremap sL <C-w>L
-nnoremap sH <C-w>H
 nnoremap sl gt
 nnoremap gg zg
 nnoremap gl ]s
 nnoremap gh [s
 nnoremap sh gT
-nnoremap sr <C-w>r
-nnoremap s= <C-w>=
-nnoremap sw <C-w>w
-nnoremap so <C-w>_<C-w>|
-nnoremap sO <C-w>=
-nnoremap sN :<C-u>bn<CR>
-nnoremap sP :<C-u>bp<CR>
-nnoremap st :<C-u>tabnew<CR>
-nnoremap sT :<C-u>Unite tab<CR>
-nnoremap ss :<C-u>sp<CR>
-nnoremap sv :<C-u>vs<CR>
-nnoremap sq :<C-u>q<CR>
-nnoremap sQ :<C-u>bd<CR>
-nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
-nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
-nnoremap x "_x
 
-
-call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
-call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
-call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
-call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
-call submode#map('bufmove', 'n', '', '>', '<C-w>>')
-call submode#map('bufmove', 'n', '', '<', '<C-w><')
-call submode#map('bufmove', 'n', '', '+', '<C-w>+')
-call submode#map('bufmove', 'n', '', '-', '<C-w>-')
 
 " light lineの設定
 
@@ -336,13 +283,45 @@ function! s:Mq4Indi()
   let result = system('cp ' .  binary . ' ' . drop_experts . 'TEST_INDI.ex4')
 endfunction
 "保存時に空白削除とシンタックスチェック
-autocmd BufWritePre * call <SID>remove_dust()
+"autocmd BufWritePre * call <SID>remove_dust()
 autocmd BufWritePost * :Phplint
-
-
-set clipboard+=unnamed
-set clipboard+=autoselect
 
 "スペルチェック
 set spell
 set spelllang+=cjk
+
+"neocomplete
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+" Define dictionary.
+let g:neocomplcache_dictionary_filetype_lists = {
+    \ 'default' : ''
+    \ }
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplcache#smart_close_popup() . "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+" 補完候補が表示されている場合は確定。そうでない場合は改行
+inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
