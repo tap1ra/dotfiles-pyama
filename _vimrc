@@ -1,5 +1,5 @@
 "------------------------------------------------------------
-" * Vundle Plugin
+
 "------------------------------------------------------------
 set nocompatible               " be iMproved
 filetype off                   " required!
@@ -13,7 +13,6 @@ Bundle 'gmarik/vundle'
 " vim-scripts repos
 " Bundle "rails.vim"
 Bundle "The-NERD-Commenter"
-Bundle "AutoClose"
 Bundle "quickhl.vim"
 Bundle "endwise.vim"
 Bundle "ruby-matchit"
@@ -30,6 +29,7 @@ Bundle "Shougo/neosnippet-snippets"
 Bundle "Shougo/neomru.vim"
 Bundle "Shougo/unite.vim"
 Bundle "Shougo/vimfiler"
+Bundle "Shougo/vimproc.vim"
 Bundle "Lokaltog/vim-easymotion"
 Bundle "mattn/emmet-vim"
 Bundle "glidenote/memolist.vim"
@@ -223,41 +223,42 @@ hi DiffText   ctermfg=black ctermbg=7
 " * neocomplete
 "------------------------------------------------------------
 
-"neocomplete
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+let g:neocomplete#enable_at_startup = 1 " 起動時に有効化
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_camel_case_completion = 0
+let g:neocomplete#enable_underbar_completion = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 3
 
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : ''
-    \ }
+" ポップアップの操作
+inoremap <expr><c-l> pumvisible() ? neocomplete#close_popup()."\<Esc>" : "\<Esc>"
+inoremap <expr><c-c> neocomplete#cancel_popup()
+inoremap <expr><BS>  neocomplete#smart_close_popup()."\<c-h>"
+inoremap <expr><c-h> neocomplete#smart_close_popup()."\<c-h>"
+" Ctrl+j, k で候補を移動
+inoremap <expr><c-j> pumvisible() ? "\<C-n>" : "\<c-j>"
+inoremap <expr><c-k> pumvisible() ? "\<C-p>" : "\<c-k>"
+" Ctrl+i or Tab でSnippetsを展開
+imap <C-i> <Plug>(neosnippet_expand_or_jump)
+smap <C-i> <Plug>(neosnippet_expand_or_jump)
+" ポップアップ、タグが存在しない場合は通常のTabを入力
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplcache#smart_close_popup() . "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-" 補完候補が表示されている場合は確定。そうでない場合は改行
-inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+" スニペットファイル
+let g:neosnippet#snippets_directory='~/dotfiles/snippets'
+
+" 補完ポップアップのカラー設定
+hi Pmenu ctermfg=7
+hi Pmenu ctermbg=8
+hi PmenuSel ctermbg=3
+hi PmenuSbar ctermbg=0
 
 
 "------------------------------------------------------------
@@ -357,10 +358,6 @@ let g:EasyMotion_grouping=1
 hi EasyMotionTarget ctermbg=none ctermfg=red
 hi EasyMotionShade  ctermbg=none ctermfg=blue
 
-" J, K で前後の行移動
-nmap J <Plug>(easymotion-j)
-nmap K <Plug>(easymotion-k)
-
 " s{char}{char}{label} で任意の2文字から始まるところへ移動
 nmap s <Plug>(easymotion-s2)
 
@@ -433,27 +430,6 @@ let g:switch_custom_definitions = [
   \   { 'expect(\([^. ]\+\))\.to\(_not\|\)': '\1.should\2' },
   \ ]
 
-
-"------------------------------------------------------------
-" * vim-quickrun
-"------------------------------------------------------------
-
-silent! nmap <C-r> <Plug>(quickrun)
-" 実行結果を下に表示
-" 実行後に出力バッファにカーソルを移動(qで閉じる)
-let g:quickrun_config = {
-  \ "*" : { 'split' : ''},
-  \ "_" : { "outputter/buffer/into" : 1,},}
-set splitbelow
-
-" markdownをMarkedで開く
-let g:quickrun_config.markdown = {
-      \ 'outputter' : 'null',
-      \ 'command'   : 'open',
-      \ 'cmdopt'    : '-a',
-      \ 'args'      : 'Marked',
-      \ 'exec'      : '%c %o %a %s',
-      \ }
 
 "------------------------------------------------------------
 " * vim-go
@@ -542,5 +518,58 @@ endfunction
 function! MyCakephp()
   return exists('*cake#buffer') ? cake#buffer('type') : ''
 endfunction
+"---------------------------------------------------------------"
+"vimproc"
+"---------------------------------------------------------------"
+let s:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
 
+function! MyReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? ' ' : ''
+endfunction
 
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:p') ? expand('%:p') : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+  try
+    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head') && strlen(fugitive#head())
+      return ' ' . fugitive#head()
+    endif
+  catch
+  endtry
+  return ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! MyCurrentTag()
+  return tagbar#currenttag('%s', '')
+endfunction
+
+function! MyCakephp()
+  return exists('*cake#buffer') ? cake#buffer('type') : ''
+endfunction
+"---------------------------------------------------------------"
+"vimproc"
+"---------------------------------------------------------------"
+let g:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
