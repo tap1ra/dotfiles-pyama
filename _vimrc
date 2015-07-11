@@ -223,42 +223,40 @@ hi DiffText   ctermfg=black ctermbg=7
 " * neocomplete
 "------------------------------------------------------------
 
-"neocomplete
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+let g:neocomplete#enable_at_startup = 1 " 起動時に有効化
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_camel_case_completion = 0
+let g:neocomplete#enable_underbar_completion = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 3
 
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : ''
-    \ }
+" ポップアップの操作
+inoremap <expr><c-l> pumvisible() ? neocomplete#close_popup()."\<Esc>" : "\<Esc>"
+inoremap <expr><c-c> neocomplete#cancel_popup()
+inoremap <expr><BS>  neocomplete#smart_close_popup()."\<c-h>"
+inoremap <expr><c-h> neocomplete#smart_close_popup()."\<c-h>"
+" Ctrl+j, k で候補を移動
+inoremap <expr><c-j> pumvisible() ? "\<C-n>" : "\<c-j>"
+inoremap <expr><c-k> pumvisible() ? "\<C-p>" : "\<c-k>"
+" Ctrl+i or Tab でSnippetsを展開
+imap <C-i> <Plug>(neosnippet_expand_or_jump)
+smap <C-i> <Plug>(neosnippet_expand_or_jump)
+" ポップアップ、タグが存在しない場合は通常のTabを入力
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+" スニペットファイル
+let g:neosnippet#snippets_directory='~/dotfiles/snippets'
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplcache#smart_close_popup() . "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-" 補完候補が表示されている場合は確定。そうでない場合は改行
-inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
-
+" 補完ポップアップのカラー設定
+hi Pmenu ctermfg=7
+hi Pmenu ctermbg=8
+hi PmenuSel ctermbg=3
+hi PmenuSbar ctermbg=0
 
 "------------------------------------------------------------
 " * Unite.vim
@@ -438,7 +436,6 @@ let g:switch_custom_definitions = [
 " * vim-quickrun
 "------------------------------------------------------------
 
-silent! nmap <C-r> <Plug>(quickrun)
 " 実行結果を下に表示
 " 実行後に出力バッファにカーソルを移動(qで閉じる)
 let g:quickrun_config = {
