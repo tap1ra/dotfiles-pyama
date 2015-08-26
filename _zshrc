@@ -23,7 +23,11 @@ export PATH=/usr/local/opt:/opt/local/bin:/opt/local/sbin:/opt/local/include:$PA
 
 #rbenv
 export RBENV_ROOT="/usr/local/var/rbenv"
-PATH="$RBENV_ROOT/bin:$PATH"
+
+#packer
+export PACKER_ROOT="/Users/PMAC173S/packer"
+
+PATH="$PACKER_ROOT:$RBENV_ROOT/bin:$PATH"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # -------------------------------------
@@ -236,14 +240,14 @@ function peco-src () {
 zle -N peco-src
 
 function peco-keypass() {
-    if [ -e ~/.ghq/git.pepabo.com/fukuoka-admin/files-secret/keepass/ver1.x/fukuoka.txt ]; then
-        local selected="$(sed -e 's/\(.*\), \(.*\), \(.*\)$/\1, \2/g' ~/.ghq/git.pepabo.com/fukuoka-admin/files-secret/keepass/ver1.x/fukuoka.txt | \
+    if [ -e ~/src/git.pepabo.com/fukuoka-admin/files-secret/keepass/ver1.x/fukuoka.txt ]; then
+        local selected="$(sed -e 's/\(.*\), \(.*\), \(.*\)$/\1, \2/g' ~/src/git.pepabo.com/fukuoka-admin/files-secret/keepass/ver1.x/fukuoka.txt | \
             peco --query "$LBUFFER")"
         local -a array
         local line
 
         if [ -n "$selected" ]; then
-            selected="$(grep "^$selected" ~/.ghq/git.pepabo.com/fukuoka-admin/files-secret/keepass/ver1.x/fukuoka.txt)"
+            selected="$(grep "^$selected" ~/src/git.pepabo.com/fukuoka-admin/files-secret/keepass/ver1.x/fukuoka.txt)"
             if [ -x "`which pbcopy`" ]; then
                 array=("${(s/, /)selected}")
 
@@ -276,3 +280,21 @@ function peco-keypass() {
 }
 zle -N peco-keypass
 bindkey '^l' peco-keypass
+
+function peco-select-history() {
+    local tac
+    if which tac > /dev/null; then
+        tac="tac"
+    else
+        tac="tail -r"
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query "$LBUFFER")
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey '^r' peco-select-history
+
+source ~/.zshenv

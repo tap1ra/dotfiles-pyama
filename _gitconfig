@@ -2,7 +2,7 @@
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
 [user]
-	name = kazuhiko yamashita
+	name = pyama86
 	email = pyama@pepabo.com
 [credential]
 	helper = osxkeychain
@@ -12,4 +12,6 @@
 [color]
 	ui = always
 [push]
-	default = current
+  default = current
+[ghq]
+      root = ~/src
