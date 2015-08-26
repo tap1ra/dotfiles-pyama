@@ -1,5 +1,5 @@
 "------------------------------------------------------------
-" * Vundle Plugin
+
 "------------------------------------------------------------
 set nocompatible               " be iMproved
 filetype off                   " required!
@@ -13,7 +13,6 @@ Bundle 'gmarik/vundle'
 " vim-scripts repos
 " Bundle "rails.vim"
 Bundle "The-NERD-Commenter"
-Bundle "AutoClose"
 Bundle "quickhl.vim"
 Bundle "endwise.vim"
 Bundle "ruby-matchit"
@@ -30,6 +29,7 @@ Bundle "Shougo/neosnippet-snippets"
 Bundle "Shougo/neomru.vim"
 Bundle "Shougo/unite.vim"
 Bundle "Shougo/vimfiler"
+Bundle "Shougo/vimproc.vim"
 Bundle "Lokaltog/vim-easymotion"
 Bundle "mattn/emmet-vim"
 Bundle "glidenote/memolist.vim"
@@ -355,10 +355,6 @@ let g:EasyMotion_grouping=1
 hi EasyMotionTarget ctermbg=none ctermfg=red
 hi EasyMotionShade  ctermbg=none ctermfg=blue
 
-" J, K で前後の行移動
-nmap J <Plug>(easymotion-j)
-nmap K <Plug>(easymotion-k)
-
 " s{char}{char}{label} で任意の2文字から始まるところへ移動
 nmap s <Plug>(easymotion-s2)
 
@@ -431,26 +427,6 @@ let g:switch_custom_definitions = [
   \   { 'expect(\([^. ]\+\))\.to\(_not\|\)': '\1.should\2' },
   \ ]
 
-
-"------------------------------------------------------------
-" * vim-quickrun
-"------------------------------------------------------------
-
-" 実行結果を下に表示
-" 実行後に出力バッファにカーソルを移動(qで閉じる)
-let g:quickrun_config = {
-  \ "*" : { 'split' : ''},
-  \ "_" : { "outputter/buffer/into" : 1,},}
-set splitbelow
-
-" markdownをMarkedで開く
-let g:quickrun_config.markdown = {
-      \ 'outputter' : 'null',
-      \ 'command'   : 'open',
-      \ 'cmdopt'    : '-a',
-      \ 'args'      : 'Marked',
-      \ 'exec'      : '%c %o %a %s',
-      \ }
 
 "------------------------------------------------------------
 " * vim-go
@@ -539,5 +515,58 @@ endfunction
 function! MyCakephp()
   return exists('*cake#buffer') ? cake#buffer('type') : ''
 endfunction
+"---------------------------------------------------------------"
+"vimproc"
+"---------------------------------------------------------------"
+let s:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
 
+function! MyReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? ' ' : ''
+endfunction
 
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:p') ? expand('%:p') : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+  try
+    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head') && strlen(fugitive#head())
+      return ' ' . fugitive#head()
+    endif
+  catch
+  endtry
+  return ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! MyCurrentTag()
+  return tagbar#currenttag('%s', '')
+endfunction
+
+function! MyCakephp()
+  return exists('*cake#buffer') ? cake#buffer('type') : ''
+endfunction
+"---------------------------------------------------------------"
+"vimproc"
+"---------------------------------------------------------------"
+let g:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
