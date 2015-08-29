@@ -49,6 +49,7 @@ Bundle 'AndrewRadev/switch.vim'
 Bundle 'fatih/vim-go'
 Bundle 'itchyny/lightline.vim'
 Bundle 'majutsushi/tagbar'
+Bundle 'bronson/vim-trailing-whitespace'
 " non github repos
 " Bundle "git://git.wincent.com/command-t.git"
 Bundle "git://github.com/Shougo/vimproc"
@@ -573,3 +574,7 @@ endfunction
 "vimproc"
 "---------------------------------------------------------------"
 let g:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
+
+
+" 保存時に空白削除
+nnoremap <C-d> :FixWhitespace <CR>
