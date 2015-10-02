@@ -17,51 +17,49 @@ endif
 
  " Required:
 call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'gmarik/vundle'
-NeoBundleFetch "rails.vim"
-NeoBundleFetch "The-NERD-Commenter"
-NeoBundleFetch "quickhl.vim"
-NeoBundleFetch "endwise.vim"
-NeoBundleFetch "ruby-matchit"
-NeoBundleFetch "vim-ruby/vim-ruby"
-NeoBundleFetch "tpope/vim-rails"
-NeoBundleFetch "tpope/vim-surround"
-NeoBundleFetch "bling/vim-airline"
-NeoBundleFetch "Shougo/neocomplete.vim"
-NeoBundleFetch "Shougo/neosnippet"
-NeoBundleFetch "Shougo/neosnippet-snippets"
-NeoBundleFetch "Shougo/neomru.vim"
-NeoBundleFetch "Shougo/unite.vim"
-NeoBundleFetch "Shougo/vimfiler"
-NeoBundleFetch "Shougo/vimproc.vim"
-NeoBundleFetch "Lokaltog/vim-easymotion"
-NeoBundleFetch "mattn/emmet-vim"
-NeoBundleFetch "glidenote/memolist.vim"
-NeoBundleFetch "thinca/vim-quickrun"
-NeoBundleFetch "monochromegane/unite-yaml"
-NeoBundleFetch 'h1mesuke/vim-alignta'
-NeoBundleFetch "scrooloose/syntastic"
-NeoBundleFetch "osyo-manga/unite-quickfix"
-NeoBundleFetch "tomtom/tcomment_vim"
-NeoBundleFetch "kana/vim-textobj-user"
-NeoBundleFetch "osyo-manga/vim-textobj-multiblock"
-NeoBundleFetch "slim-template/vim-slim"
-NeoBundleFetch 'thoughtbot/vim-rspec'
-NeoBundleFetch 'tpope/vim-dispatch'
-NeoBundleFetch 'edsono/vim-matchit'
-NeoBundleFetch 'AndrewRadev/switch.vim'
-NeoBundleFetch 'fatih/vim-go'
-NeoBundleFetch 'itchyny/lightline.vim'
-NeoBundleFetch 'majutsushi/tagbar'
-NeoBundleFetch 'bronson/vim-trailing-whitespace'
-NeoBundleFetch "git://github.com/Shougo/vimproc"
+NeoBundle 'gmarik/vundle'
+NeoBundle "rails.vim"
+NeoBundle "The-NERD-Commenter"
+NeoBundle "quickhl.vim"
+NeoBundle "endwise.vim"
+NeoBundle "ruby-matchit"
+NeoBundle "vim-ruby/vim-ruby"
+NeoBundle "tpope/vim-rails"
+NeoBundle "tpope/vim-surround"
+NeoBundle "bling/vim-airline"
+NeoBundle "Shougo/neocomplete.vim"
+NeoBundle "Shougo/neosnippet"
+NeoBundle "Shougo/neosnippet-snippets"
+NeoBundle "Shougo/neomru.vim"
+NeoBundle "Shougo/unite.vim"
+NeoBundle "Shougo/vimproc.vim"
+NeoBundle "Lokaltog/vim-easymotion"
+NeoBundle "mattn/emmet-vim"
+NeoBundle "glidenote/memolist.vim"
+NeoBundle "thinca/vim-quickrun"
+NeoBundle "monochromegane/unite-yaml"
+NeoBundle 'h1mesuke/vim-alignta'
+NeoBundle "scrooloose/syntastic"
+NeoBundle "osyo-manga/unite-quickfix"
+NeoBundle "tomtom/tcomment_vim"
+NeoBundle "kana/vim-textobj-user"
+NeoBundle "osyo-manga/vim-textobj-multiblock"
+NeoBundle "slim-template/vim-slim"
+NeoBundle 'thoughtbot/vim-rspec'
+NeoBundle 'tpope/vim-dispatch'
+NeoBundle 'edsono/vim-matchit'
+NeoBundle 'AndrewRadev/switch.vim'
+NeoBundle 'fatih/vim-go'
+NeoBundle 'itchyny/lightline.vim'
+NeoBundle 'majutsushi/tagbar'
+NeoBundle 'bronson/vim-trailing-whitespace'
+NeoBundle "Shougo/vimfiler"
 
 call neobundle#end()
 
 " Required:
 filetype plugin indent on
 
-NeoBundleCheck
 "------------------------------------------------------------
 " * 基本の設定
 "------------------------------------------------------------
@@ -160,10 +158,6 @@ set noswapfile
 
 " 履歴保存数
 set history=200
-
-"スペルチェック
-set spell
-set spelllang+=cjk
 
 set clipboard=unnamed
 
@@ -574,10 +568,6 @@ endfunction
 function! MyCakephp()
   return exists('*cake#buffer') ? cake#buffer('type') : ''
 endfunction
-"---------------------------------------------------------------"
-"vimproc"
-"---------------------------------------------------------------"
-let g:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
 
 
 " 保存時に空白削除
