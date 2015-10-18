@@ -149,7 +149,7 @@ set noswapfile
 
 " 文字、改行コードを自動判別する
 :set encoding=utf-8
-:set fileencodings=default,euc-jp,sjis,utf-8
+:set fileencodings=default,euc-jp,sjis,utf-8,utf-16,utf-16le
 :set fileformats=unix,dos,mac
 
 " 履歴保存数
@@ -575,3 +575,5 @@ let g:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
 
 " 保存時に空白削除
 nnoremap <C-d> :FixWhitespace <CR>
+
+set runtimepath+=expand('~/.vim/vim-mql4')
