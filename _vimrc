@@ -32,7 +32,6 @@ NeoBundle "Shougo/neosnippet"
 NeoBundle "Shougo/neosnippet-snippets"
 NeoBundle "Shougo/neomru.vim"
 NeoBundle "Shougo/unite.vim"
-NeoBundle "Shougo/vimfiler"
 NeoBundle "Shougo/vimproc.vim"
 NeoBundle "Lokaltog/vim-easymotion"
 NeoBundle "mattn/emmet-vim"
@@ -54,14 +53,12 @@ NeoBundle 'fatih/vim-go'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'bronson/vim-trailing-whitespace'
-NeoBundle "git://github.com/Shougo/vimproc"
 
 call neobundle#end()
 
 " Required:
 filetype plugin indent on
 
-NeoBundleCheck
 "------------------------------------------------------------
 " * 基本の設定
 "------------------------------------------------------------
@@ -160,10 +157,6 @@ set noswapfile
 
 " 履歴保存数
 set history=200
-
-"スペルチェック
-"set spell
-"set spelllang+=cjk
 
 set clipboard=unnamed
 
@@ -520,6 +513,58 @@ endfunction
 function! MyCakephp()
   return exists('*cake#buffer') ? cake#buffer('type') : ''
 endfunction
+"---------------------------------------------------------------"
+"vimproc"
+"---------------------------------------------------------------"
+let s:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
+
+function! MyReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? ' ' : ''
+endfunction
+
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:p') ? expand('%:p') : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+  try
+    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head') && strlen(fugitive#head())
+      return ' ' . fugitive#head()
+    endif
+  catch
+  endtry
+  return ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! MyCurrentTag()
+  return tagbar#currenttag('%s', '')
+endfunction
+
+function! MyCakephp()
+  return exists('*cake#buffer') ? cake#buffer('type') : ''
+endfunction
+
 
 " 保存時に空白削除
 nnoremap <C-d> :FixWhitespace <CR>
