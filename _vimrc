@@ -153,7 +153,7 @@ set noswapfile
 
 " 文字、改行コードを自動判別する
 :set encoding=utf-8
-:set fileencodings=default,euc-jp,sjis,utf-8
+:set fileencodings=default,euc-jp,sjis,utf-8,utf-16,utf-16le
 :set fileformats=unix,dos,mac
 
 " 履歴保存数
@@ -244,8 +244,6 @@ imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
 \: pumvisible() ? "\<C-n>" : "\<TAB>"
 
-
-
 " For snippet_complete marker.
 if has('conceal')
   set conceallevel=2 concealcursor=i
@@ -258,7 +256,6 @@ hi Pmenu ctermfg=7
 hi Pmenu ctermbg=8
 hi PmenuSel ctermbg=3
 hi PmenuSbar ctermbg=0
-
 
 "------------------------------------------------------------
 " * Unite.vim
@@ -572,3 +569,5 @@ endfunction
 
 " 保存時に空白削除
 nnoremap <C-d> :FixWhitespace <CR>
+
+set runtimepath+=expand('~/.vim/vim-mql4')
