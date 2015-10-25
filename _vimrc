@@ -3,59 +3,65 @@
 "------------------------------------------------------------
 set nocompatible               " be iMproved
 filetype off                   " required!
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-" let Vundle manage Vundle
-" required!
-Bundle 'gmarik/vundle'
-" My Bundles here:
-"
-" vim-scripts repos
-" Bundle "rails.vim"
-Bundle "The-NERD-Commenter"
-Bundle "quickhl.vim"
-Bundle "endwise.vim"
-Bundle "ruby-matchit"
 
-" original repos on github
-" Bundle "tpope/vim-fugitive"
-Bundle "vim-ruby/vim-ruby"
-Bundle "tpope/vim-rails"
-Bundle "tpope/vim-surround"
-Bundle "bling/vim-airline"
-Bundle "Shougo/neocomplete.vim"
-Bundle "Shougo/neosnippet"
-Bundle "Shougo/neosnippet-snippets"
-Bundle "Shougo/neomru.vim"
-Bundle "Shougo/unite.vim"
-Bundle "Shougo/vimfiler"
-Bundle "Shougo/vimproc.vim"
-Bundle "Lokaltog/vim-easymotion"
-Bundle "mattn/emmet-vim"
-Bundle "glidenote/memolist.vim"
-Bundle "thinca/vim-quickrun"
-Bundle "monochromegane/unite-yaml"
-Bundle 'h1mesuke/vim-alignta'
-Bundle "scrooloose/syntastic"
-Bundle "osyo-manga/unite-quickfix"
-Bundle "tomtom/tcomment_vim"
-Bundle "kana/vim-textobj-user"
-Bundle "osyo-manga/vim-textobj-multiblock"
-Bundle "slim-template/vim-slim"
-Bundle 'thoughtbot/vim-rspec'
-Bundle 'tpope/vim-dispatch'
-Bundle 'edsono/vim-matchit'
-Bundle 'AndrewRadev/switch.vim'
-Bundle 'fatih/vim-go'
-Bundle 'itchyny/lightline.vim'
-Bundle 'majutsushi/tagbar'
-Bundle 'bronson/vim-trailing-whitespace'
-" non github repos
-" Bundle "git://git.wincent.com/command-t.git"
-Bundle "git://github.com/Shougo/vimproc"
+if 0 | endif
 
-filetype plugin indent on     " required!
+if has('vim_starting')
+  if &compatible
+    set nocompatible               " Be iMproved
+  endif
 
+  " Required:
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+ " Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+NeoBundleFetch 'gmarik/vundle'
+NeoBundleFetch "rails.vim"
+NeoBundleFetch "The-NERD-Commenter"
+NeoBundleFetch "quickhl.vim"
+NeoBundleFetch "endwise.vim"
+NeoBundleFetch "ruby-matchit"
+NeoBundleFetch "vim-ruby/vim-ruby"
+NeoBundleFetch "tpope/vim-rails"
+NeoBundleFetch "tpope/vim-surround"
+NeoBundleFetch "bling/vim-airline"
+NeoBundleFetch "Shougo/neocomplete.vim"
+NeoBundleFetch "Shougo/neosnippet"
+NeoBundleFetch "Shougo/neosnippet-snippets"
+NeoBundleFetch "Shougo/neomru.vim"
+NeoBundleFetch "Shougo/unite.vim"
+NeoBundleFetch "Shougo/vimfiler"
+NeoBundleFetch "Shougo/vimproc.vim"
+NeoBundleFetch "Lokaltog/vim-easymotion"
+NeoBundleFetch "mattn/emmet-vim"
+NeoBundleFetch "glidenote/memolist.vim"
+NeoBundleFetch "thinca/vim-quickrun"
+NeoBundleFetch "monochromegane/unite-yaml"
+NeoBundleFetch 'h1mesuke/vim-alignta'
+NeoBundleFetch "scrooloose/syntastic"
+NeoBundleFetch "osyo-manga/unite-quickfix"
+NeoBundleFetch "tomtom/tcomment_vim"
+NeoBundleFetch "kana/vim-textobj-user"
+NeoBundleFetch "osyo-manga/vim-textobj-multiblock"
+NeoBundleFetch "slim-template/vim-slim"
+NeoBundleFetch 'thoughtbot/vim-rspec'
+NeoBundleFetch 'tpope/vim-dispatch'
+NeoBundleFetch 'edsono/vim-matchit'
+NeoBundleFetch 'AndrewRadev/switch.vim'
+NeoBundleFetch 'fatih/vim-go'
+NeoBundleFetch 'itchyny/lightline.vim'
+NeoBundleFetch 'majutsushi/tagbar'
+NeoBundleFetch 'bronson/vim-trailing-whitespace'
+NeoBundleFetch "git://github.com/Shougo/vimproc"
+
+call neobundle#end()
+
+" Required:
+filetype plugin indent on
+
+NeoBundleCheck
 "------------------------------------------------------------
 " * 基本の設定
 "------------------------------------------------------------
@@ -233,8 +239,6 @@ let g:neocomplete#sources#syntax#min_keyword_length = 3
 " ポップアップの操作
 inoremap <expr><c-l> pumvisible() ? neocomplete#close_popup()."\<Esc>" : "\<Esc>"
 inoremap <expr><c-c> neocomplete#cancel_popup()
-inoremap <expr><BS>  neocomplete#smart_close_popup()."\<c-h>"
-inoremap <expr><c-h> neocomplete#smart_close_popup()."\<c-h>"
 " Ctrl+j, k で候補を移動
 inoremap <expr><c-j> pumvisible() ? "\<C-n>" : "\<c-j>"
 inoremap <expr><c-k> pumvisible() ? "\<C-p>" : "\<c-k>"
