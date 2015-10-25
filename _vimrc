@@ -156,8 +156,8 @@ set noswapfile
 set history=200
 
 "スペルチェック
-set spell
-set spelllang+=cjk
+"set spell
+"set spelllang+=cjk
 
 set clipboard=unnamed
 
