@@ -17,6 +17,7 @@ endif
 
  " Required:
 call neobundle#begin(expand('~/.vim/bundle/'))
+NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'gmarik/vundle'
 NeoBundle "rails.vim"
 NeoBundle "The-NERD-Commenter"
@@ -33,6 +34,7 @@ NeoBundle "Shougo/neosnippet-snippets"
 NeoBundle "Shougo/neomru.vim"
 NeoBundle "Shougo/unite.vim"
 NeoBundle "Shougo/vimproc.vim"
+NeoBundle 'Shougo/vimfiler.vim'
 NeoBundle "Lokaltog/vim-easymotion"
 NeoBundle "mattn/emmet-vim"
 NeoBundle "glidenote/memolist.vim"
@@ -53,13 +55,11 @@ NeoBundle 'fatih/vim-go'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'bronson/vim-trailing-whitespace'
-NeoBundle "Shougo/vimfiler"
-
 call neobundle#end()
 
 " Required:
 filetype plugin indent on
-
+NeoBundleCheck
 "------------------------------------------------------------
 " * 基本の設定
 "------------------------------------------------------------
