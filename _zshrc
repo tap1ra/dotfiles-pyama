@@ -129,8 +129,8 @@ setopt auto_cd
 
 # historyを共有する
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=100000
+SAVEHIST=100000
 setopt hist_ignore_dups     # ignore duplication command history list
 # -------------------------------------
 # パス
@@ -296,5 +296,18 @@ function peco-select-history() {
 }
 zle -N peco-select-history
 bindkey '^r' peco-select-history
+
+# gitのリポジトリを開く
+function open-git-remote() {
+  git rev-parse --git-dir >/dev/null 2>&1
+  if [[ $? == 0 ]]; then
+    git config --get remote.origin.url | sed -e 's#ssh://git@#https://#g' | xargs open
+  else
+    echo ".git not found.\n"
+  fi
+}
+
+zle -N open-git-remote
+bindkey '^o' open-git-remote
 
 source ~/.zshenv

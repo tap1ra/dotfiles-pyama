@@ -119,9 +119,6 @@ set visualbell
 " そしてビジュアルベルも無効化する
 set t_vb=
 
-" 全モードでマウスを無効化
-" set mouse=a
-
 " コマンドラインの高さを2行に
 set cmdheight=2
 
@@ -157,7 +154,7 @@ set noswapfile
 :set fileformats=unix,dos,mac
 
 " 履歴保存数
-set history=200
+set history=50
 
 set clipboard=unnamed
 
@@ -200,6 +197,8 @@ nnoremap sh gT
 nnoremap Q  :qa<CR>
 nnoremap ,S :suspend<CR>
 
+
+set tabpagemax=100
 "------------------------------------------------------------
 " * autocmd
 "------------------------------------------------------------
@@ -459,7 +458,6 @@ let g:lightline = {
       \   'mode': 'MyMode',
       \   'anzu': 'anzu#search_status',
       \   'currenttag': 'MyCurrentTag',
-      \   'cakephp': 'MyCakephp',
       \ }
       \ }
 
@@ -511,63 +509,10 @@ function! MyCurrentTag()
   return tagbar#currenttag('%s', '')
 endfunction
 
-function! MyCakephp()
-  return exists('*cake#buffer') ? cake#buffer('type') : ''
-endfunction
 "---------------------------------------------------------------"
 "vimproc"
 "---------------------------------------------------------------"
 let s:vimproc_dll_path = '~/.vim/bundle/vimproc/autoload/vimproc_mac.so'
 
-function! MyReadonly()
-  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? ' ' : ''
-endfunction
-
-function! MyFilename()
-  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
-        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
-        \  &ft == 'unite' ? unite#get_status_string() :
-        \  &ft == 'vimshell' ? vimshell#get_status_string() :
-        \ '' != expand('%:p') ? expand('%:p') : '[No Name]') .
-        \ ('' != MyModified() ? ' ' . MyModified() : '')
-endfunction
-
-function! MyFugitive()
-  try
-    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head') && strlen(fugitive#head())
-      return ' ' . fugitive#head()
-    endif
-  catch
-  endtry
-  return ''
-endfunction
-
-function! MyFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! MyFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! MyFileencoding()
-  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
-endfunction
-
-function! MyMode()
-  return winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-function! MyCurrentTag()
-  return tagbar#currenttag('%s', '')
-endfunction
-
-function! MyCakephp()
-  return exists('*cake#buffer') ? cake#buffer('type') : ''
-endfunction
-
-
 " 保存時に空白削除
 nnoremap <C-d> :FixWhitespace <CR>
-
-set runtimepath+=expand('~/.vim/vim-mql4')
