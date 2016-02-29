@@ -113,7 +113,7 @@ set t_Co=256
 colorscheme default
 
 "カーソル行の強調表示
-set cursorline
+"set cursorline
 
 "スワップファイルをつくらない
 set noswapfile
