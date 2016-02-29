@@ -1,65 +1,38 @@
-"------------------------------------------------------------
+" プラグインが実際にインストールされるディレクトリ
+let s:dein_dir = expand('~/.cache/dein')
+" dein.vim 本体
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 
-"------------------------------------------------------------
-set nocompatible               " be iMproved
-filetype off                   " required!
-
-if 0 | endif
-
-if has('vim_starting')
-  if &compatible
-    set nocompatible               " Be iMproved
+" dein.vim がなければ github から落としてくる
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
   endif
-
-  " Required:
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
 endif
 
- " Required:
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'gmarik/vundle'
-NeoBundle "rails.vim"
-NeoBundle "The-NERD-Commenter"
-NeoBundle "quickhl.vim"
-NeoBundle "endwise.vim"
-NeoBundle "ruby-matchit"
-NeoBundle "vim-ruby/vim-ruby"
-NeoBundle "tpope/vim-rails"
-NeoBundle "tpope/vim-surround"
-NeoBundle "bling/vim-airline"
-NeoBundle "Shougo/neocomplete.vim"
-NeoBundle "Shougo/neosnippet"
-NeoBundle "Shougo/neosnippet-snippets"
-NeoBundle "Shougo/neomru.vim"
-NeoBundle "Shougo/unite.vim"
-NeoBundle "Shougo/vimproc.vim"
-NeoBundle 'Shougo/vimfiler.vim'
-NeoBundle "Lokaltog/vim-easymotion"
-NeoBundle "mattn/emmet-vim"
-NeoBundle "glidenote/memolist.vim"
-NeoBundle "thinca/vim-quickrun"
-NeoBundle "monochromegane/unite-yaml"
-NeoBundle 'h1mesuke/vim-alignta'
-NeoBundle "scrooloose/syntastic"
-NeoBundle "osyo-manga/unite-quickfix"
-NeoBundle "tomtom/tcomment_vim"
-NeoBundle "kana/vim-textobj-user"
-NeoBundle "osyo-manga/vim-textobj-multiblock"
-NeoBundle "slim-template/vim-slim"
-NeoBundle 'thoughtbot/vim-rspec'
-NeoBundle 'tpope/vim-dispatch'
-NeoBundle 'edsono/vim-matchit'
-NeoBundle 'AndrewRadev/switch.vim'
-NeoBundle 'fatih/vim-go'
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'bronson/vim-trailing-whitespace'
-call neobundle#end()
+" 設定開始
+call dein#begin(s:dein_dir)
 
-" Required:
-filetype plugin indent on
-NeoBundleCheck
+" プラグインリストを収めた TOML ファイル
+let s:toml      = '~/dotfile/vim/dein.toml'
+let s:lazy_toml = '~/dotfile/vim/dein_lazy.toml'
+
+" TOML を読み込み、キャッシュしておく
+if dein#load_cache([expand('<sfile>'), s:toml, s:lazy_toml])
+  call dein#load_toml(s:toml,      {'lazy': 0})
+  call dein#load_toml(s:lazy_toml, {'lazy': 1})
+  call dein#save_cache()
+endif
+
+" 設定終了
+call dein#end()
+
+" もし、未インストールものものがあったらインストール
+if dein#check_install()
+  call dein#install()
+endif
+
 "------------------------------------------------------------
 " * 基本の設定
 "------------------------------------------------------------
@@ -72,9 +45,6 @@ filetype indent plugin on
 
 " 色づけをオン
 syntax on
-
-" バッファを保存しなくても他のバッファを表示できるようにする
-set hidden
 
 " コマンドライン補完を便利に
 set wildmenu
@@ -203,21 +173,15 @@ set tabpagemax=100
 " * autocmd
 "------------------------------------------------------------
 if has("autocmd")
+  " rubyファイルの定義
+  autocmd BufRead,BufNewFile {Jsfile,Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru,*.cap,*.ctl,*.etl,*.ebf} set ft=ruby
   autocmd FileType php setlocal sw=4 sts=4 ts=4 et
   autocmd FileType go  setlocal sw=8 sts=8 ts=8 noet
+  autocmd FileType ruby set ts=2 sw=2 expandtab
   " md as markdown, instead of modula2
   autocmd BufRead,BufNewFile *.md set filetype=markdown
+  autocmd Filetype * set formatoptions-=r
 endif
-
-
-"------------------------------------------------------------
-" * VimDiff
-"------------------------------------------------------------
-hi DiffAdd    ctermfg=black ctermbg=2
-hi DiffChange ctermfg=black ctermbg=3
-hi DiffDelete ctermfg=black ctermbg=6
-hi DiffText   ctermfg=black ctermbg=7
-
 
 "------------------------------------------------------------
 " * neocomplete
@@ -257,71 +221,6 @@ hi PmenuSel ctermbg=3
 hi PmenuSbar ctermbg=0
 
 "------------------------------------------------------------
-" * Unite.vim
-"------------------------------------------------------------
-
-" insert modeで開始
-let g:unite_enable_start_insert=1
-
-" 大文字小文字を区別しない
-let g:unite_enable_ignore_case = 1
-let g:unite_enable_smart_case = 1
-
-" uniteのbufferを表示する
-
-" 全部乗せ
-nnoremap <silent> ,a  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
-" ファイル一覧
-nnoremap <silent> ,f  :<C-u>Unite -buffer-name=files file<CR>
-" Everything検索
-nnoremap <silent> ,e  :<C-u>Unite file_rec/async<CR>
-" バッファ一覧
-nnoremap <silent> ,v  :<C-u>Unite buffer<CR>
-" 常用セット
-nnoremap <silent> ,u  :<C-u>Unite buffer file_rec/async<CR>
-" 最近使用したファイル一覧
-nnoremap <silent> ,m  :<C-u>Unite file_mru<CR>
-" 現在のバッファのカレントディレクトリからファイル一覧
-nnoremap <silent> ,d  :<C-u>UniteWithBufferDir file<CR>
-" find検索
-nnoremap <silent> ,s  :<C-u>Unite find<CR>
-" grep検索
-nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
-" カーソル位置の単語をgrep検索
-nnoremap          ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
-" grep検索結果の再呼出
-nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
-" chrome bookmark
-nnoremap <silent> ,b  :<C-u>Unite script:osascript:~/.vim/bundle/unite-script/examples/chrome_bookmarks.scpt<CR>
-" quick-fix
-nnoremap <silent> ,l  :<C-u>Unite location_list<CR>
-" snippets
-nnoremap <silent> ,sn :<C-u>Unite snippet<CR>
-" yaml
-let g:unite_yaml_prefix = "Settings."
-nnoremap <silent> ,y  :<C-u>Unite yaml-list<CR>
-nnoremap <silent> ,Y  :<C-u>UniteResume yaml-buffer<CR>
-
-" ,cで終了する
-au FileType unite nnoremap <silent> <buffer> ,c :q<CR>
-au FileType unite inoremap <silent> <buffer> ,c <ESC>:q<CR>
-
-" unite mode でのキーマッピング
-autocmd FileType unite call s:unite_my_settings()
-function! s:unite_my_settings()
-  imap <silent><buffer> <C-k> <C-p>
-  imap <silent><buffer> <C-j> <C-n>
-  imap <silent><buffer> <C-d> <CR>
-endfunction
-
-" unite grep に pt(The Platinum Searcher) を使う
-if executable('pt')
-  let g:unite_source_grep_command = 'pt'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor'
-  let g:unite_source_grep_recursive_opt = ''
-endif
-
-"------------------------------------------------------------
 " * VimFiler
 "------------------------------------------------------------
 
@@ -336,95 +235,6 @@ function! s:my_vimfiler_settings()
 endfunction
 "eを押すとタブで開く"
 let g:vimfiler_edit_action = 'tabopen'
-"------------------------------------------------------------
-" * EasyMotion
-"------------------------------------------------------------
-
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
-
-" Turn on case sensitive feature
-let g:EasyMotion_smartcase = 1
-
-" ホームポジションに近いキーを使う
-let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
-" 1 ストローク選択を優先する
-let g:EasyMotion_grouping=1
-" カラー設定変更
-hi EasyMotionTarget ctermbg=none ctermfg=red
-hi EasyMotionShade  ctermbg=none ctermfg=blue
-
-" s{char}{char}{label} で任意の2文字から始まるところへ移動
-nmap s <Plug>(easymotion-s2)
-
-" g/ で検索、Enterでラベルによる移動
-nmap g/ <Plug>(easymotion-sn)
-
-
-"------------------------------------------------------------
-" * vim-alignta
-"------------------------------------------------------------
-let g:alignta_default_arguments="="
-vnoremap al :Alignta<Space><CR>
-vnoremap ah :Alignta <<0 \ /1<CR>
-
-
-"------------------------------------------------------------
-" * syntastic
-"------------------------------------------------------------
-let g:syntastic_always_populate_loc_list = 1
-
-
-"------------------------------------------------------------
-" * textobj-multiblock
-"------------------------------------------------------------
-omap ak <Plug>(textobj-multiblock-a)
-omap ik <Plug>(textobj-multiblock-i)
-xmap ak <Plug>(textobj-multiblock-a)
-xmap ik <Plug>(textobj-multiblock-i)
-
-
-"------------------------------------------------------------
-" * memolist.vim
-"------------------------------------------------------------
-nnoremap <silent> mn :<C-u>MemoNew<CR>
-nnoremap <silent> ml :<C-u>Unite file:<C-r>=expand(g:memolist_path."/")<CR><CR>
-nnoremap <silent> mg :<C-u>Unite grep:<C-r>=expand(g:memolist_path."/")<CR><CR>
-nnoremap <silent> mf :<C-u>VimFiler <C-r>=expand(g:memolist_path."/")<CR><CR>
-
-
-"------------------------------------------------------------
-" * zen-coding
-"------------------------------------------------------------
-
-" codaのデフォルトと一緒にする
-imap <C-E> <C-Y>,
-let g:user_zen_leader_key = '<C-Y>'
-
-
-"------------------------------------------------------------
-" * vim-rspec
-"------------------------------------------------------------
-let g:rspec_command = "Dispatch bin/rspec {spec}"
-
-nnoremap <silent> ,sf :<C-u>call RunCurrentSpecFile()<CR>
-nnoremap <silent> ,sc :<C-u>call RunNearestSpec()<CR>
-nnoremap <silent> ,ss :<C-u>call RunLastSpec()<CR>
-nnoremap <silent> ,sa :<C-u>call RunAllSpecs()<CR>
-
-"------------------------------------------------------------
-" * switch
-"------------------------------------------------------------
-
-nnoremap - :Switch<cr>
-let g:switch_custom_definitions = [
-  \   ['describe', 'context', 'specific', 'example'],
-  \   ['be_true', 'be_false'],
-  \   { '\.should_not': '\.should' },
-  \   ['\.to_not', '\.to'],
-  \   { '\([^. ]\+\)\.should\(_not\|\)': 'expect(\1)\.to\2' },
-  \   { 'expect(\([^. ]\+\))\.to\(_not\|\)': '\1.should\2' },
-  \ ]
-
 
 "------------------------------------------------------------
 " * vim-go
@@ -434,80 +244,6 @@ au FileType go nmap gi <Plug>(go-info)
 au FileType go nmap gd <Plug>(go-def)
 au FileType go nmap gt <Plug>(go-test)
 let g:go_fmt_command = "goimports"
-
-" light lineの設定
-
-let g:lightline = {
-      \ 'colorscheme': 'powerline',
-      \ 'mode_map': {'c': 'NORMAL'},
-      \ 'active': {
-      \   'left': [ ['mode', 'paste'],['fugitive', 'filename', 'cakephp', 'currenttag', 'anzu'],['cd']]
-      \ },
-      \ 'component': {
-      \   'cd': '%.35(%{fnamemodify(getcwd(), ":~")}%)',
-      \   'lineinfo': ' %3l:%-2v',
-      \ },
-      \ 'component_function': {
-      \   'modified': 'MyModified',
-      \   'readonly': 'MyReadonly',
-      \   'fugitive': 'MyFugitive',
-      \   'filename': 'MyFilename',
-      \   'fileformat': 'MyFileformat',
-      \   'filetype': 'MyFiletype',
-      \   'fileencoding': 'MyFileencoding',
-      \   'mode': 'MyMode',
-      \   'anzu': 'anzu#search_status',
-      \   'currenttag': 'MyCurrentTag',
-      \ }
-      \ }
-
-
-function! MyModified()
-  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-
-function! MyReadonly()
-  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? ' ' : ''
-endfunction
-
-function! MyFilename()
-  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
-        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
-        \  &ft == 'unite' ? unite#get_status_string() :
-        \  &ft == 'vimshell' ? vimshell#get_status_string() :
-        \ '' != expand('%:p') ? expand('%:p') : '[No Name]') .
-        \ ('' != MyModified() ? ' ' . MyModified() : '')
-endfunction
-
-function! MyFugitive()
-  try
-    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head') && strlen(fugitive#head())
-      return ' ' . fugitive#head()
-    endif
-  catch
-  endtry
-  return ''
-endfunction
-
-function! MyFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! MyFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! MyFileencoding()
-  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
-endfunction
-
-function! MyMode()
-  return winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-function! MyCurrentTag()
-  return tagbar#currenttag('%s', '')
-endfunction
 
 "---------------------------------------------------------------"
 "vimproc"
