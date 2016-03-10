@@ -1,0 +1,7 @@
+[[plugins]]
+repo = "vim-ruby/vim-ruby"
+on_ft = ['ruby']
+
+[[plugins]]
+repo = 'fatih/vim-go'
+on_ft = ['go']

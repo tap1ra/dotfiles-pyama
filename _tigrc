@@ -1,0 +1,18 @@
+bind main    R !git rebase -i %(commit)
+bind main    B !git revert -i %(commit)
+bind status  A !git commit --amend
+bind status  P !git push origin
+bind generic L :toggle split-view-width -10%   # Decrease split height
+bind generic H :toggle split-view-width +10%   # Decrease split height
+
+bind generic C none
+bind status  C !git commit
+
+bind generic G none
+bind generic g move-first-line
+bind generic G move-last-line
+
+bind diff <Ctrl-f>  move-page-down
+bind diff <Ctrl-b>   move-page-up
+
+set split-view-width = 70%

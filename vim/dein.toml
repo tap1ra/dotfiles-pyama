@@ -1,0 +1,37 @@
+[[plugins]]
+repo  = "scrooloose/nerdcommenter"
+
+[[plugins]]
+repo  = "tpope/vim-endwise"
+
+[[plugins]]
+repo = "bling/vim-airline"
+
+[[plugins]]
+repo = "Shougo/neocomplete.vim"
+
+[[plugins]]
+repo = "Shougo/neosnippet"
+
+[[plugins]]
+repo = "Shougo/neosnippet-snippets"
+
+#[[plugins]]
+#repo = "Shougo/neomru.vim"
+
+[[plugins]]
+repo = "Shougo/unite.vim"
+
+[[plugins]]
+repo = "Shougo/vimproc.vim"
+[plugins.build]
+mac = "make -f make_mac.mak"
+
+[[plugins]]
+repo = "Shougo/vimfiler.vim"
+
+#[[plugins]]
+#repo = "itchyny/lightline.vim"
+
+[[plugins]]
+repo = "bronson/vim-trailing-whitespace"
