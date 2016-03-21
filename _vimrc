@@ -265,3 +265,11 @@ if executable('pt')
   let g:unite_source_grep_recursive_opt = ''
 endif
 
+"
+"---------------------------------------------------------------"
+"marcdown previer"
+"---------------------------------------------------------------"
+nnoremap <silent> ,p :<C-u>PrevimOpen<CR>
+au BufRead,BufNewFile *.md set filetype=markdown
+let g:previm_open_cmd = 'open -a Google\ Chrome '
+

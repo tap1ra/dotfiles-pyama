@@ -3,7 +3,7 @@
 # -------------------------------------
 ZSH=$HOME/.oh-my-zsh
 source $ZSH/oh-my-zsh.sh
-plugins=(git ruby gem brew vi-mode vagrant osx fabric deb compleat rbenv)
+plugins=(git vi-mode osx)
 ZSH_THEME="mh"
 # wget http://mimosa-pudica.net/src/incr-0.2.zsh
 
@@ -309,5 +309,6 @@ function open-git-remote() {
 
 zle -N open-git-remote
 bindkey '^o' open-git-remote
+
 
 source ~/.zshenv
