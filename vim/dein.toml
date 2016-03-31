@@ -40,7 +40,7 @@ repo = "bronson/vim-trailing-whitespace"
 repo = "jwhitley/vim-matchit"
 
 [[plugins]]
-repo = "plasticboy/vim-markdown"
+repo = "thinca/vim-quickrun"
 
 [[plugins]]
 repo = "kannokanno/previm"
