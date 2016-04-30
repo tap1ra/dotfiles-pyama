@@ -25,7 +25,7 @@ export PATH=/usr/local/opt:/opt/local/bin:/opt/local/sbin:/opt/local/include:$PA
 export RBENV_ROOT="/usr/local/var/rbenv"
 
 #packer
-export PACKER_ROOT="/Users/PMAC173S/packer"
+export PACKER_ROOT="$HOME/packer"
 
 PATH="$PACKER_ROOT:$RBENV_ROOT/bin:$PATH"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
@@ -218,6 +218,7 @@ bindkey "^R" history-incremental-search-backward
 # Peco
 if [ `which peco >/dev/null 2>&1 ; echo $?` -eq 0 ]; then
   bindkey '^s' peco-src
+  bindkey '^b' peco-branch
 fi
 
 # -------------------------------------
@@ -238,6 +239,24 @@ function peco-src () {
     zle clear-screen
 }
 zle -N peco-src
+
+
+function peco-branch() {
+
+    # commiterdate:relativeを commiterdate:localに変更すると普通の時刻表示
+    local selected_line="$(git for-each-ref --format='%(refname:short) | %(committerdate:relative) | %(committername) | %(subject)' --sort=-committerdate refs/heads refs/remotes \
+        | column -t -s '|' \
+        | peco \
+        | head -n 1 \
+        | awk '{print $1}')"
+    if [ -n "$selected_line" ]; then
+        BUFFER="git checkout ${selected_line}"
+        CURSOR=$#BUFFER
+        zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N peco-branch
 
 function peco-keypass() {
     if [ -e ~/src/git.pepabo.com/fukuoka-admin/files-secret/keepass/ver1.x/fukuoka.txt ]; then
@@ -310,36 +329,23 @@ function open-git-remote() {
 zle -N open-git-remote
 bindkey '^o' open-git-remote
 
-# rakeの補完
-_cachefile_updated_at() {
-  echo $(stat -f%m .rake_tasks)
+
+_rake_does_task_list_need_generating () {
+  if [[ ! -f .rake_tasks ]]; then return 0;
+  else
+    return $([[ Rakefile -nt .rake_tasks ]])
+  fi
 }
 
-_rakefile_updated_at() {
-  echo $(stat -f%m Rakefile)
-}
-
-_gemfile_updated_at() {
-  echo $(stat -f%m Gemfile)
-}
-
-_generate_cachefile() {
-  rake --silent --tasks 2> /dev/null | cut  -f 2 -d " " > .rake_tasks
-}
-
-_rake() {
-  if [ -f Rakefile ]; then
-    if [ ! -f .rake_tasks ] || \
-       [ "`cat .rake_tasks | wc -l`" = "0" ] || \
-       [ `_cachefile_updated_at` -lt `_rakefile_updated_at` ] || \
-       [ -f Gemfile -a `_cachefile_updated_at` -lt `_gemfile_updated_at` ]; then
-      _generate_cachefile
+_rake () {
+  if [[ -f Rakefile ]]; then
+    if _rake_does_task_list_need_generating; then
+      echo "\nGenerating .rake_tasks..." >&2
+      bin/rake --silent --tasks | cut -d " " -f 2 >| .rake_tasks
     fi
-    compadd `cat .rake_tasks`
+    compadd $(<.rake_tasks)
   fi
 }
 
 compdef _rake rake
-
-
 source ~/.zshenv

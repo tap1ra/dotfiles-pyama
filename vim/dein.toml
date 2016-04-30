@@ -43,7 +43,4 @@ repo = "jwhitley/vim-matchit"
 repo = "thinca/vim-quickrun"
 
 [[plugins]]
-repo = "kannokanno/previm"
-
-[[plugins]]
 repo = "tyru/open-browser.vim"
