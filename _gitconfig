@@ -3,7 +3,7 @@
 	smudge = git-media-smudge %f
 [user]
 	name = pyama86
-	email = pyama@pepabo.com
+	email = www.kazu.com@gmail.com
 [credential]
 	helper = osxkeychain
 [core]
