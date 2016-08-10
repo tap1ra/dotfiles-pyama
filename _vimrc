@@ -278,20 +278,53 @@ if executable('pt')
   let g:unite_source_grep_recursive_opt = ''
 endif
 
+"---------------------------------------------------------------"
+"vim rails"
+"---------------------------------------------------------------"
 "
-"---------------------------------------------------------------"
-"marcdown previer"
-"---------------------------------------------------------------"
-nnoremap <silent> ,p :<C-u>PrevimOpen<CR>
-au BufRead,BufNewFile *.md set filetype=markdown
-let g:previm_open_cmd = 'open -a Google\ Chrome '
+"let g:rails_default_file='config/database.yml'
+"let g:rails_level = 4
+"let g:rails_mappings=1
+"let g:rails_modelines=0
+"function! SetUpRailsSetting()
+"  nnoremap <buffer><Space>r :R<CR>
+"  nnoremap <buffer><Space>a :A<CR>
+"  nnoremap <buffer><Space>m :Rmodel<Space>
+"  nnoremap <buffer><Space>c :Rcontroller<Space>
+"  nnoremap <buffer><Space>v :Rview<Space>
+"  nnoremap <buffer><Space>p :Rpreview<CR>
+"endfunction
+"
+"aug MyAutoCmd
+"  au User Rails call SetUpRailsSetting()
+"aug END
+"
+"aug RailsDictSetting
+"  au!
+"aug END
 
-" Unite
-let g:unite_enable_start_insert=1
-let g:unite_source_history_yank_enable =1
-let g:unite_source_file_mru_limit = 200
-nnoremap <silent> ,uy :<C-u>Unite history/yank<CR>
-nnoremap <silent> ,ub :<C-u>Unite buffer<CR>
-nnoremap <silent> ,uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
-nnoremap <silent> ,uu :<C-u>Unite file_mru buffer<CR>
+
+"------------------------------------
+" Unite-rails.vim
+"------------------------------------
+"{{{
+function! UniteRailsSetting()
+  nnoremap <buffer><C-H><C-H><C-H>  :<C-U>Unite rails/view<CR>
+  nnoremap <buffer><C-H><C-H>       :<C-U>Unite rails/model<CR>
+  nnoremap <buffer><C-H>            :<C-U>Unite rails/controller<CR>
+
+  nnoremap <buffer><C-H>c           :<C-U>Unite rails/config<CR>
+  nnoremap <buffer><C-H>s           :<C-U>Unite rails/spec<CR>
+  nnoremap <buffer><C-H>m           :<C-U>Unite rails/db -input=migrate<CR>
+  nnoremap <buffer><C-H>l           :<C-U>Unite rails/lib<CR>
+  nnoremap <buffer><expr><C-H>g     ':e '.b:rails_root.'/Gemfile<CR>'
+  nnoremap <buffer><expr><C-H>r     ':e '.b:rails_root.'/config/routes.rb<CR>'
+  nnoremap <buffer><expr><C-H>se    ':e '.b:rails_root.'/db/seeds.rb<CR>'
+  nnoremap <buffer><C-H>ra          :<C-U>Unite rails/rake<CR>
+  nnoremap <buffer><C-H>h           :<C-U>Unite rails/heroku<CR>
+endfunction
+aug MyAutoCmd
+  au User Rails call UniteRailsSetting()
+aug END
+"}}}
+

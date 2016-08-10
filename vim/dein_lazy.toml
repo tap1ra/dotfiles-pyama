@@ -3,5 +3,13 @@ repo = "vim-ruby/vim-ruby"
 on_ft = ['ruby']
 
 [[plugins]]
+repo = "basyura/unite-rails"
+on_ft = ['ruby']
+
+[[plugins]]
+repo = "tpope/vim-rails"
+on_ft = ['ruby']
+
+[[plugins]]
 repo = 'fatih/vim-go'
 on_ft = ['go']

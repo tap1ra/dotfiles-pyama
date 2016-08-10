@@ -246,6 +246,7 @@ function peco-branch() {
     # commiterdate:relativeを commiterdate:localに変更すると普通の時刻表示
     local selected_line="$(git for-each-ref --format='%(refname:short) | %(committerdate:relative) | %(committername) | %(subject)' --sort=-committerdate refs/heads refs/remotes \
         | column -t -s '|' \
+        | grep -v 'origin' \
         | peco \
         | head -n 1 \
         | awk '{print $1}')"
