@@ -341,8 +341,8 @@ _rake_does_task_list_need_generating () {
 _rake () {
   if [[ -f Rakefile ]]; then
     if _rake_does_task_list_need_generating; then
-      echo "\nGenerating .rake_tasks..." >&2
-      bin/rake --silent --tasks | cut -d " " -f 2 >| .rake_tasks
+      #echo "\nGenerating .rake_tasks..." >&2
+      bin/rake --silent --tasks | cut -d " " -f 2 >| .rake_tasks &
     fi
     compadd $(<.rake_tasks)
   fi
