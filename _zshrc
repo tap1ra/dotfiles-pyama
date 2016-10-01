@@ -21,14 +21,10 @@ export MANPAGER=/usr/local/bin/vimpager
 # パスの設定
 export PATH=/usr/local/opt:/opt/local/bin:/opt/local/sbin:/opt/local/include:$PATH
 
-#rbenv
-export RBENV_ROOT="/usr/local/var/rbenv"
 
 #packer
 export PACKER_ROOT="$HOME/packer"
-
 PATH="$PACKER_ROOT:$RBENV_ROOT/bin:$PATH"
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # -------------------------------------
 # zshのオプション
@@ -349,4 +345,12 @@ _rake () {
 }
 
 compdef _rake rake
+
+# cdr
+autoload -Uz add-zsh-hook
+autoload -Uz chpwd_recent_dirs cdr
+add-zsh-hook chpwd chpwd_recent_dirs
+zstyle ':chpwd:*' recent-dirs-max 200
+zstyle ':chpwd:*' recent-dirs-default true
+
 source ~/.zshenv
