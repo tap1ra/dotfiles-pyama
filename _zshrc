@@ -353,4 +353,7 @@ add-zsh-hook chpwd chpwd_recent_dirs
 zstyle ':chpwd:*' recent-dirs-max 200
 zstyle ':chpwd:*' recent-dirs-default true
 
+# brew install ctags
+alias ctags="`brew --prefix`/bin/ctags" 
+
 source ~/.zshenv

@@ -129,6 +129,34 @@ set clipboard=unnamed
 
 " 折りたたみ
 set nofoldenable    " disable folding
+
+" ctags自動保存
+let g:auto_ctags = 1
+let g:auto_ctags_directory_list = ['.git']
+set tags+=.git/tags
+" tagsジャンプの時に複数ある時は一覧表示
+nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
+
+" 画面分割
+nnoremap g <Nop>
+nnoremap gj <C-w>j
+nnoremap gk <C-w>k
+nnoremap gl <C-w>l
+nnoremap gh <C-w>h
+nnoremap gs :<C-u>sp<CR>
+nnoremap gv :<C-u>vs<CR>
+
+" 画面サイズ変更
+call submode#enter_with('bufmove', 'n', '', 'g>', '<C-w>>')
+call submode#enter_with('bufmove', 'n', '', 'g<', '<C-w><')
+call submode#enter_with('bufmove', 'n', '', 'g+', '<C-w>+')
+call submode#enter_with('bufmove', 'n', '', 'g-', '<C-w>-')
+call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+call submode#map('bufmove', 'n', '', '<', '<C-w><')
+call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+
 "------------------------------------------------------------
 " * 基本のキーマッピング
 "------------------------------------------------------------
@@ -189,6 +217,8 @@ if has("autocmd")
   " rubyファイルの定義
   autocmd BufRead,BufNewFile {Jsfile,Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru,*.cap,*.ctl,*.etl,*.ebf} set ft=ruby
   autocmd FileType php setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType pl setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType t setlocal sw=4 sts=4 ts=4 et
   autocmd FileType go  setlocal sw=8 sts=8 ts=8 noet
   autocmd FileType ruby set ts=2 sw=2 expandtab
   " md as markdown, instead of modula2
