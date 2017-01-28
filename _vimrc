@@ -109,7 +109,7 @@ set expandtab
 set t_Co=256
 
 "colorschemeを設定する
-colorscheme default
+"colorscheme default
 
 "カーソル行の強調表示
 "set cursorline

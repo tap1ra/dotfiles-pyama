@@ -204,6 +204,8 @@ setopt share_history
 alias be='nocorrect bundle exec'
 
 alias gitlog='git log | more'
+
+alias gotest='go test $(go list ./... | grep -v /vendor/)'
 # -------------------------------------
 # キーバインド
 # -------------------------------------
